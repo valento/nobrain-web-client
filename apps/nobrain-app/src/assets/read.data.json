@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "required": ["title", "body"],
+  "properties": {
+    "title": { "type": "string", "maxLength": 255 },
+    "deck": {"type": "string", "maxLength": 500},
+    "body": { "type": "string" },
+    "read_category": { "type": "string", "enum": ["blog", "tool", "about", "doc", "event"] },
+    "subcategory": { "type": "string" },
+    "status": { "type": "string", "enum": ["draft", "published", "archived"] },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "seo_keywords": { "type": "array", "items": { "type": "string" } },
+    "priority": { "type": "integer", "minimum": 0, "maximum": 10 },
+    "author": { "type": "string" },
+    "author_id": {"type": "integer"},
+    "slug": {"type": "string", "maxLength": 255}
+  }
+}

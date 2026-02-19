@@ -1,0 +1,17 @@
+{
+  "elements": [
+    { "field": "title", "widget": "input", "placeholder": "Title" },
+    { "field": "deck", "widget": "input", "placeholder": "Subtitle/deck" },
+    { "field": "read_category", "widget": "select" },
+    { "field": "status", "widget": "select" },
+    { "field": "subcategory", "widget": "input", "placeholder": "Subcategory" },
+    { "field": "tags", "widget": "tag-input", "placeholder": "Add tag → Press Enter" },
+    { "field": "body", "widget": "textarea", "rows": 15, "placeholder": "Content (Markdown)..." },
+    { "field": "created_at", "widget": "" },
+    { "field": "updated_at", "widget": "" },
+    { "field": "author", "widget": "input", "placeholder": "Author (optional)" },
+    { "field": "slug", "widget": "input", "placeholder": "url-friendly-slug" },
+    { "field": "priority", "widget": "slider", "min": 0, "max": 10 },
+    { "field": "seo_keywords", "widget": "tag-input", "placeholder": "SEO keywords" }
+  ]
+}

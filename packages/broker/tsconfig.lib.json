@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/packages/broker",
+    "declaration": true,
+    "lib": ["DOM"]
+  },
+  "include": ["src/**/*.ts"]
+}

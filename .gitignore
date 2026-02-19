@@ -2,6 +2,8 @@
 
 # compiled output
 dist
+dist-ssr
+*.local
 tmp
 out-tsc
 
@@ -31,12 +33,23 @@ node_modules
 /libpeerconnection.log
 npm-debug.log
 yarn-error.log
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
 testem.log
 /typings
 
 # System Files
 .DS_Store
 Thumbs.db
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 .nx/cache
 .nx/workspace-data

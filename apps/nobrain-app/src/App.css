@@ -1,0 +1,24 @@
+.logo {
+  height: 6em;
+  padding: 2em;
+  will-change: filter;
+  transition: filter 300ms;
+  animation-name: logo-spin;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}

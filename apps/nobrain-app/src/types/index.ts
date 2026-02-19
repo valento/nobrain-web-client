@@ -1,0 +1,1 @@
+export type { SearchResultItem } from './search'
