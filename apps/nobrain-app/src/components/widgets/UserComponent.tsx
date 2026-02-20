@@ -1,29 +1,30 @@
 import { useEffect, useState } from 'react'
-import { broker } from '@nx-mono/broker'
-
-import user_icon from '@/assets/user.svg'
+import { broker, storage } from '@nx-mono/broker'
+import type { User } from '@nx-mono/broker'
 
 export default function UserComponent() {
-  const [user, setUser] = useState<string | null>(null)
-  const [id, setId] = useState<number | null>()
+  const [token, setToken] = useState<string | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [showLogin, setShowLogin] = useState(false)
 
   useEffect(() => {
-    setUser(localStorage.getItem('tolken'))
-  }, [user])
+    const u = storage.getUser()
+    const t = storage.getToken()
+    setToken(t)
+    setUser(u)
+  }, [user?.id])
 
   return (
     <div className="auth-bar">
-      
       <button className="user-trigger" onClick={() => {
         setShowLogin(!showLogin)
         broker.emit('ui:show-login', { visible: !showLogin})
       }}>
-        {!user? <img src={user_icon} alt="user" width={24} height={24} /> : <img src={user_icon} alt="user" width={24} height={24} />}
+        {!token? '🔑' : `👤 ${user?.username}` }
       </button>
-
+      
       <a href="/play">Play</a>
-      <a href={"/create/"+id}>Read</a>
+      <a href={"/read/"}>Read</a>
       <a href="/play">Repeat</a>
     </div>
   )

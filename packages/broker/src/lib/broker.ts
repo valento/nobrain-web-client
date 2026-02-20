@@ -1,7 +1,19 @@
 export interface User {
-  id: string
+  id: number        // Changed from string to number (matches DB)
+  username: string  // Added
   email: string
-  name?: string
+  full_name?: string  // Changed from name
+  role: string      // Added
+}
+
+export interface LoginCredentials {
+  email: string
+  password: string
+}
+
+export interface AuthResponse {
+  access_token: string
+  token_type: string
 }
 
 export interface EventMap {

@@ -6,6 +6,9 @@ export function UserWidget() {
   const [user, setUser] = useState<User | null>(null)
   const [open, setOpen] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem('token')
+  )
 
   useEffect(() => {
     const onToggle = ({ visible }: { visible: boolean }) => setShowLogin(visible)
@@ -32,7 +35,7 @@ export function UserWidget() {
       broker.off('auth:login-success', onLogin)
       broker.off('auth:logout', onLogout)
     }
-  }, [])
+  }, [token])
 
   // Not logged in — login trigger + dropdown
   if (!user) {
@@ -49,36 +52,35 @@ export function UserWidget() {
 
   // Logged in — avatar + drawer overlay
   return (
-    <>
+    
+    <div className="user-widget">
       
-      <div className="user-widget">
-        
-        {/* <button className="user-trigger" onClick={() => setshowLogin(!showLogin)}>
-          👤 {user.name}
-        </button> */}
+      {/* <button className="user-trigger" onClick={() => setshowLogin(!showLogin)}>
+        👤 {user.name}
+      </button> */}
 
-        {open && (
-          <>
-            <div className="drawer-backdrop" onClick={() => setOpen(false)} />
-            <nav className="drawer">
-              <div className="drawer-header">
-                <span>{user.name}</span>
-                <button onClick={() => setOpen(false)}>✕</button>
-              </div>
-              <ul>
-                <li>Profile</li>
-                <li>Settings</li>
-                <li>Marketplace</li>
-                <li>
-                  <button onClick={() => broker.emit('auth:logout')}>
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </>
-        )}
-      </div>
-    </>
+      {open && (
+        <>
+          <div className="drawer-backdrop" onClick={() => setOpen(false)} />
+          <nav className="drawer">
+            <div className="drawer-header">
+              <span>{user.username}</span>
+              <button onClick={() => setOpen(false)}>✕</button>
+            </div>
+            <ul>
+              <li>Profile</li>
+              <li>Settings</li>
+              <li>Marketplace</li>
+              <li>
+                <button onClick={() => broker.emit('auth:logout')}>
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </>
+      )}
+    </div>
+    
   )
 }

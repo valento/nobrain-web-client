@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { broker } from '@nx-mono/broker'
+import { broker, storage } from '@nx-mono/broker'
+import type { User } from '@nx-mono/broker'
 
 export function LoginWidget() {
   const [email, setEmail] = useState('')
@@ -13,9 +14,20 @@ export function LoginWidget() {
     setLoading(true)
 
     try {
-      const mockUser = { id: '1', email, name: email.split('@')[0] }
-      const mockToken = 'mock-jwt-token'
-      broker.emit('auth:login-success', { token: mockToken, user: mockUser })
+        const response = await fetch('http://localhost:8000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        const { access_token, user }: {access_token: string, user: User} = data
+        storage.setToken(access_token)
+        storage.setUser(user)
+        broker.emit('auth:login-success', { token: access_token, user: user })
+        // Redirect to dashboard or fetch user info
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Login failed'
       setError(message)
