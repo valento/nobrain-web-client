@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
 import { broker, storage, type User } from '@nx-mono/broker'
-import { LoginWidget } from '@nx-mono/user-widget'
 import '../App.css'
+
 import { UserWidget } from '@nx-mono/user-widget'
 import Brand from '../components/widgets/Brand'
 import SearchWidget from '../components/widgets/SearchWidget'
+import { ColumnComponent } from '@/components/ui/ColumnComponent'
 
 export default function Landing() {
 
@@ -74,22 +74,8 @@ export default function Landing() {
           <div className="brick">
             <div className='widget'><SearchWidget /></div>
           </div>
-          <div className="brick">
-            <div className='widget number'>
-              <div className='timestamp dark'>services | Oct 01, 2025</div>
-              <div className="header">
-                Lorem Ipsum
-                <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
-              </div>
-              
-              <div className='body short'>There are many variations of passages of Lorem Ipsum available,
-                but the majority have suffered alteration in some form, by injected humour, or...
-              </div>
-            </div>
-            <div className='widget number'>
-              <div className='timestamp'>services | Oct 01, 2025</div>
-            </div>
-          </div>
+          {/* Ordered Readings */}
+          <ColumnComponent />
         </div>
 
 {/* ======== Right ================================================================================ */}
@@ -176,3 +162,23 @@ export default function Landing() {
       </div>
   )
 }
+
+
+/**
+      <div className="brick">
+        <div className='widget number'>
+          <div className='timestamp dark'>services | Oct 01, 2025</div>
+          <div className="header">
+            Lorem Ipsum
+            <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
+          </div>
+          
+          <div className='body short'>There are many variations of passages of Lorem Ipsum available,
+            but the majority have suffered alteration in some form, by injected humour, or...
+          </div>
+        </div>
+        <div className='widget number'>
+          <div className='timestamp'>services | Oct 01, 2025</div>
+        </div>
+      </div>
+ */

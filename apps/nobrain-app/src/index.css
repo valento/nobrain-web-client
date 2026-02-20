@@ -1,7 +1,6 @@
 :root {
     --main-color: 247 232 223; /*#f7e8df*/
-    --main-dark: 51 51 51;
-    /* #F2DFCE */
+    --main-dark: 51 51 51; /* #F2DFCE */
 }
 body {
   text-align: center;
@@ -37,6 +36,7 @@ button {
     margin: 0;
     padding: 0;
     border: 0 solid;
+}
 /* ==================================================================================================== */
 /* ======== GRID ================================ */
 .page-grid {
@@ -451,9 +451,9 @@ h1 {
 /* ------------- CONTAINERS ------------------------------------------------------------------- */
 
 @container brick (min-width: 200px) {
-  .brick > .widget::after { content: "200+"}
+  .brick > .widget::after { content: "200+"; }
 }
 
 @container brick (min-width: 400px) {
-  .brick > .widget::after { content: "400+"}
+  .brick > .widget::after { content: "400+"; }
 }

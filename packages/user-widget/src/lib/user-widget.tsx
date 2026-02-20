@@ -29,7 +29,7 @@ export function UserWidget() {
     broker.on('auth:login-success', onLogin)
     broker.on('auth:logout', onLogout)
     return () => {
-      broker.off('auth:login-success', onToggle)
+      broker.off('auth:login-success', onLogin)
       broker.off('auth:logout', onLogout)
     }
   }, [])
