@@ -180,13 +180,16 @@ input[type=text] {
   border: 1px solid rgb(var(--main-dark) / .5);
   /* pointer-events: none; */
 }
+.json-form .select-box {
+  display: inline-block;
+  width: 50%;
+}
 .json-form select {
-  display: flex;
   margin: 0 5%;
-  min-width: 30%;
+  min-width: 50%;
   margin-bottom: .5rem;
   padding: .3rem;
-  font-size: 1.1rem;
+  font-size: .9rem;
   border: 1px solid rgb(var(--main-dark) / .5);
   border-radius: 4px;
 }
@@ -196,7 +199,7 @@ input[type=text] {
   border: 1px solid rgb(var(--main-dark) / .5);
   border-radius: 4px;
 }
-.json-form .title {
+.json-form .title, .json-form .deck {
   font: inherit;
 }
 .json-form .tags, .json-form .subcategory {
@@ -243,6 +246,45 @@ input[type=text] {
 .json-form .slug {
   display: none;
 }
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  align-items: left;
+}
+.login-form input {
+  width: 100%;
+  padding: .8rem .9rem;
+  border-radius: 1rem;
+  border: 2px solid rgb(var(--main-dark) / 1);
+  background-color: rgb(255 255 255 / .6);
+  color: rgb(var(--main-dark) / 1);
+}
+.login-form label {
+  display: block;
+  white-space: nowrap;
+  margin: .3rem .5rem .2rem 1rem;
+  font-size: .8rem;
+  font-style: italic;
+}
+.login-form button {
+  width: 80%;
+  margin: 1rem auto;
+  padding: .8rem 1rem;
+  border-radius: 1rem;
+  border: 2px solid rgb(var(--main-dark) / 1);
+  background-color: rgb(var(--main-dark) / .8);
+  color: rgba(var(--main-color) / 1);
+  font-weight: 800;
+  text-transform: uppercase;
+  /* font */
+}
+
+.user-widget {
+  padding: 0 1rem;
+}
+
 .hideme {
   display: none;
 }
@@ -385,10 +427,37 @@ h1 {
 
   input[type=text] {
     width: 80%;
-    padding: 1.7rem;
+    padding: 1.4rem;
     border: .3rem double --main-dark;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
+
+  .login-form {
+    gap: 1rem;
+    flex-direction: row;
+    align-items: last baseline;
+  }
+  .login-form button {
+    flex: .2;
+  }
+  .login-form-space input {
+    width:100%;
+    /* margin: 0 1rem; */
+  }
+  .json-form select {
+    min-height: 70%;
+  }
+  .login-form label {
+    margin: .5rem .5rem .2rem 1rem;
+    font-size: 1rem;
+  }
+  .login-form-space.mail {
+    flex: .8;
+  }
+  .login-form-space.password {
+    flex: .4;
+  }
+
   .auth-bar {
     font-size: 1.15rem;
   }
@@ -407,6 +476,7 @@ h1 {
   .timestamp {
     font-size: .65rem;
   }
+
 }
 
 @media only screen and (min-width: 1024px) {

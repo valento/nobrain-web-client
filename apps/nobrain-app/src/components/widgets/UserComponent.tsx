@@ -8,11 +8,21 @@ export default function UserComponent() {
   const [showLogin, setShowLogin] = useState(false)
 
   useEffect(() => {
+    // Set up listener
+    const handleSuccess = ({ token, user }:  { token: string; user: User }) => {
+      setToken(token)
+      setUser(user)
+    }
+    broker.on('auth:login-success', handleSuccess)
+
     const u = storage.getUser()
     const t = storage.getToken()
+    
     setToken(t)
     setUser(u)
-  }, [user?.id])
+
+    return () => broker.off('auth:login-success', handleSuccess )
+  }, [user?.id, token])
 
   return (
     <div className="auth-bar">

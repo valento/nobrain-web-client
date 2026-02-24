@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import staticDataSchema from '@/assets/read.data.json' with { type: 'json' }
 import staticUiSchema from '@/assets/read.ui.json'
+import { storage } from '@nx-mono/broker'
 
 interface SchemaProperty {
   type: string
@@ -103,16 +104,20 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
         status: formData.status,
         seo_keywords: formData.seo_keywords
       },
-      author_id: formData.author_id as number || 1
+      author_id: storage.getUser()?.id as number || 1
     }
 
     try {
       const REQUEST_URL = contentId? `http://localhost:8000/content/${contentId}` : 'http://localhost:8000/content/'
       const REQUEST_METOD = contentId? 'PUT' : 'POST'
       
+      const token = storage.getToken()
       const response = await fetch(REQUEST_URL, {
         method: REQUEST_METOD,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`  // Add this!
+        },
         body: JSON.stringify(payload)
       })
       
@@ -152,6 +157,8 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
               </div>
             ) : null
           }
+        case 'toggle':
+          return null
         default:
           return <div className={element.field}>{value}</div>
       }
@@ -184,6 +191,13 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
               )}
             </select>
         )}
+      case 'toggle':
+        return (
+          <label>
+            {element.field.replace('_', ' ')}
+            <input type="checkbox" />
+          </label>
+        )
       case 'slider':
         return (
           <div className='slider'>
@@ -260,7 +274,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
         handleSubmit(e)
       }}>
       {uiSchema.elements.map(el => (
-        <div key={el.field} >
+        <div className={el.widget==='select' || el.widget==='toggle'? 'select-box' : ''} key={el.field} >
           {/* <label>{el.field}</label> */}
           {renderField(el)}
         </div>

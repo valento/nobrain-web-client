@@ -8,6 +8,7 @@
             "type": "object",
             "properties": {
                 "content_type": {"type": "string", "const": "read"},
+                "widget_size": {"type": "string", "enum": ["small", "medium", "large", "xlarge"]},
                 "read_category": {"type": "string", "enum": ["blog", "about", "doc", "event"]},
                 "subcategory": {"type": "string"},
                 "tags": {"type": "array", "items": {"type": "string"}},

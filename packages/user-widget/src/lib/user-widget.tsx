@@ -54,10 +54,6 @@ export function UserWidget() {
   return (
     
     <div className="user-widget">
-      
-      {/* <button className="user-trigger" onClick={() => setshowLogin(!showLogin)}>
-        👤 {user.name}
-      </button> */}
 
       {open && (
         <>

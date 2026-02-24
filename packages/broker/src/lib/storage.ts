@@ -1,7 +1,7 @@
 import { User } from './broker'
 
-const TOKEN_KEY = 'auth_token'
-const USER_KEY = 'auth_user'
+const TOKEN_KEY = 'token'
+const USER_KEY = 'user'
 
 export const storage = {
 
