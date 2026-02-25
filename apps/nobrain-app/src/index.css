@@ -156,6 +156,12 @@ button {
 }
 
 /* ============= FORMS =================================================== */
+
+input[type=range] {
+  height: 2px;
+  accent-color: rgb(var(--main-dark));
+}
+
 input[type=text] {
   margin: 0 auto;
   margin-bottom: 2rem;
@@ -229,6 +235,15 @@ input[type=text] {
 }
 .json-form .slider input {
   width: 85%;
+}
+
+.json-form .slider label {
+  display: block;
+  white-space: nowrap;
+  text-align: left;
+  margin: .3rem .5rem .2rem 1.5rem;
+  font-size: .9rem;
+  font-style: italic;
 }
 .json-form .submit {
   min-width: 40%;
@@ -448,8 +463,12 @@ h1 {
   .json-form select {
     min-height: 70%;
   }
+  .json-form .slider label {
+    margin: .3rem .5rem .2rem 4rem;
+    font-size: 1rem;
+  }
   .login-form label {
-    margin: .5rem .5rem .2rem 1rem;
+  .5  margin: .5rem .5rem .2rem 1rem;
     font-size: 1rem;
   }
   .login-form-space.mail {

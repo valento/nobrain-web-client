@@ -152,7 +152,7 @@ function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edi
     switch (element.widget) {
       case 'input':
         return (
-          !element.edit || !element.edit == undefined? <></>: 
+          !element.edit? <></>: 
           <input
             type="text"
             value={value}
@@ -187,6 +187,7 @@ function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edi
       case 'slider':
         return (
           <div className='slider'>
+            <label>priority:</label>
             <input
               type="range"
               min={element.min || fieldSchema?.minimum || 1}
