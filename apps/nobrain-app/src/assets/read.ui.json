@@ -9,7 +9,7 @@
     { "field": "subcategory", "widget": "input", "placeholder": "Subcategory" },
     { "field": "tags", "widget": "tag-input", "placeholder": "Add tag → Press Enter" },
     { "field": "body", "widget": "textarea", "rows": 15, "placeholder": "Content (Markdown)..." },
-    { "field": "slug", "widget": "input", "placeholder": "url-friendly-slug" },
+    { "field": "author", "widget": "input", "edit": false },
     { "field": "priority", "widget": "slider", "min": 0, "max": 10 },
     { "field": "seo_keywords", "widget": "tag-input", "placeholder": "SEO keywords" }
   ]

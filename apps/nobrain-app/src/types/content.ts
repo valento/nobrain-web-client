@@ -4,7 +4,10 @@ export interface ContentItem {
   title: string
   deck: string | null
   body: string
+  author_id: number | null
   author_name: string | null
+  parent_id: number | null
+  sequence_order: number | null
   created_at: string
   updated_at: string
   metadata: Record<string, any>

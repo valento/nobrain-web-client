@@ -29,49 +29,34 @@ interface ContentWithSchemas {
   updated_at: string
 }
 
-function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit' | 'read'}) {
+function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edit' | 'read'}) {
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
   const [formData, setFormData] = useState<Record<string, string | number | string[]>>({})
-// console.log(formData);
-
+  
   const dataSchema = staticDataSchema
   const uiSchema = staticUiSchema
 
-  const [loading, setLoading] = useState(mode == 'read'? true : false)
-
   useEffect(() => {
-    if (!contentId) return
-    setLoading(true)
-    
-    fetch(`http://localhost:8000/content/${contentId}`)
-      .then(result => result.json())
-      .then((data: ContentWithSchemas) => {
-        setContent(data)
-        
-        setFormData({
-          title: data.title,
-          deck: data.deck,
-          body: data.body,
-          created_at: data.created_at,
-          updated_at: new Date(data.updated_at).toLocaleDateString('en-US',
-            {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric'
-            }),
-            author: data.author_name,
-            slug: data.slug,
-          ...data.metadata
-        })
-        setLoading(false)
-      })
-      .catch( err => {
-        console.log('Faild to load data', err);
-        setLoading(false)
-      })
-    
-  } ,[contentId])
-  
+    if (data) {
+      setContent(data)
+      setFormData({
+            title: data.title,
+            deck: data.deck,
+            body: data.body,
+            created_at: data.created_at,
+            updated_at: new Date(data.updated_at).toLocaleDateString('en-US',
+              {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              }),
+              author: data.author_name,
+              slug: data.slug,
+            ...data.metadata
+          })
+    }
+  }, [data?.id])
+
 
   function handleChange(field: string, value: string | string[] | number) {
     console.log(field, value);
@@ -132,7 +117,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
   }
 
   // UI-schema Fields
-  function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number }) {
+  function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number; edit?: boolean }) {
     if(!content && mode == 'read') return null
 
     const fieldSchema = (dataSchema.properties as Record<string, any>)[element.field]
@@ -167,6 +152,7 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
     switch (element.widget) {
       case 'input':
         return (
+          !element.edit || !element.edit == undefined? <></>: 
           <input
             type="text"
             value={value}
@@ -262,9 +248,6 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
     }
   }
 
-// Loading...
-  if (mode == 'read' && loading) return <div>Loading...</div>
-  if (mode == 'read' && !content) return <div>Content not found</div>
   
 // Render Content
   return mode == 'edit'? (
@@ -280,6 +263,15 @@ function DynamicForm({contentId, mode='edit'}: {contentId?: number; mode: 'edit'
         </div>
       ))}
       <button className='submit' type="submit">Save</button>
+      {mode === 'edit' && formData && data?.id && (
+        <button
+          className='submit secondary'
+          type="button"
+          // onClick={() => navigate.(`/admin/new?parent_id=${formData.id}`)}
+        >
+          Add Chapter
+        </button>
+      )}
     </form>
   ) : (
     <article>
