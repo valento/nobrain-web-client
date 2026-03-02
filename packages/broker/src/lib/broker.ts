@@ -33,6 +33,8 @@ export interface EventMap {
 
   // UI events
   'ui:show-login': { visible: boolean }
+  'ui:next-chapter': void
+  'ui:cancel-edit': void
 }
 
 type Callback<T = unknown> = (data: T) => void

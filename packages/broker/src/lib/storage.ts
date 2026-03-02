@@ -19,5 +19,5 @@ export const storage = {
   clear: () => {
     localStorage.removeItem(TOKEN_KEY)
     localStorage.removeItem(USER_KEY)
-  }
+  },
 }

@@ -81,3 +81,8 @@ export default defineConfig([
   },
 ])
 ```
+
+
+#
+#
+# [SVGs taken from >>](https://www.svgviewer.dev/s/458856/eye)

@@ -2,34 +2,21 @@ import { useEffect, useState } from 'react'
 
 import staticDataSchema from '@/assets/read.data.json' with { type: 'json' }
 import staticUiSchema from '@/assets/read.ui.json'
-import { storage } from '@nx-mono/broker'
+import { broker, storage } from '@nx-mono/broker'
+import type { ContentWithSchemas } from '@/types/content';
 
-interface SchemaProperty {
-  type: string
-  maxLength?: number
-  minimum?: number
-  maximum?: number
-  enum?: string[]
-  items?: {
-    type: string
-  }
-  const?: string
-  properties?: Record<string, SchemaProperty>
-}
+function DynamicForm(
+    {
+      data,
+      mode='edit',
+      onSaveSuccess
+    }: {
+      data?: ContentWithSchemas;
+      mode: 'edit' | 'read' | 'view';
+      onSaveSuccess: ()=> void
+    }
+  ) {
 
-interface ContentWithSchemas {
-  id: number
-  title: string
-  deck: string
-  body: string
-  slug: string
-  author_name: string
-  metadata: Record<string, SchemaProperty>
-  created_at: string
-  updated_at: string
-}
-
-function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edit' | 'read'}) {
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
   const [formData, setFormData] = useState<Record<string, string | number | string[]>>({})
   
@@ -40,30 +27,81 @@ function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edi
     if (data) {
       setContent(data)
       setFormData({
-            title: data.title,
-            deck: data.deck,
-            body: data.body,
-            created_at: data.created_at,
-            updated_at: new Date(data.updated_at).toLocaleDateString('en-US',
-              {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-              }),
-              author: data.author_name,
-              slug: data.slug,
-            ...data.metadata
-          })
+        title: data.title,
+        deck: data.deck,
+        body: data.body,
+        created_at: data.created_at,
+        widget_size: data.widget_size,
+        price: data.price,
+        updated_at: new Date(data.updated_at).toLocaleDateString('en-US',
+          {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }),
+          author: data.author_username,
+          slug: data.slug,
+        ...data.metadata
+      })
     }
   }, [data?.id])
 
+  useEffect(() => {
+    const handleNext = () => {
+      if(data) {
+        const { id, widget_size, parent_id } = data
+        setFormData({
+          title: '',
+          deck: '',
+          body: '',
+          subcategory: '',
+          parent_id: parent_id? parent_id: id,
+          widget_size,
+          ...data.metadata
+        })
+    }
+    setContent(null)
+  }
+    broker.on('ui:next-chapter', handleNext)
+
+    return () => broker.off('ui:next-chapter', handleNext)
+  }, [formData.id])
+
+  useEffect(() => {
+    const refreshForm = () => {
+      if(data) {
+        setFormData({
+        title: data.title,
+        deck: data.deck,
+        body: data.body,
+        created_at: data.created_at,
+        widget_size: data.widget_size,
+        price: data.price,
+        updated_at: new Date(data.updated_at).toLocaleDateString('en-US',
+          {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }),
+          author: data.author_username,
+          slug: data.slug,
+        ...data.metadata
+      })
+      }
+    }
+    broker.on('ui:cancel-edit', refreshForm)
+
+    return () => broker.off('ui:cancel-edit', refreshForm)
+  }, [mode])
+
 
   function handleChange(field: string, value: string | string[] | number) {
-    console.log(field, value);
+    // console.log(field, value);
     
     setFormData(prev => ({ ...prev, [field]: value }))
   }
-  
+
+
 // Nested JSONB DB-objects (like metadata)
   function getNestedValue(obj: Record<string, string | number | string[]>, path: string): string | number | string[] | undefined {    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,27 +127,28 @@ function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edi
         status: formData.status,
         seo_keywords: formData.seo_keywords
       },
-      author_id: storage.getUser()?.id as number || 1
+      parent_id: formData.parent_id,
+      author_id: storage.getUser()?.id as number || 1,
     }
 
     try {
-      const REQUEST_URL = contentId? `http://localhost:8000/content/${contentId}` : 'http://localhost:8000/content/'
-      const REQUEST_METOD = contentId? 'PUT' : 'POST'
+      const REQUEST_URL = content?.id? `http://localhost:8000/content/${content?.id}` : 'http://localhost:8000/content/'
+      const REQUEST_METOD = content?.id? 'PUT' : 'POST'
       
       const token = storage.getToken()
       const response = await fetch(REQUEST_URL, {
         method: REQUEST_METOD,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`  // Add this!
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(payload)
       })
       
       if (response.ok) {
-        const data = await response.json()
-        console.log('Created:', data)
-        // Redirect or show success message
+        const updatedContent = await response.json()
+        setContent(updatedContent)
+        onSaveSuccess()
       }
     } catch (error) {
       console.error('Failed to create content:', error)
@@ -117,7 +156,7 @@ function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edi
   }
 
   // UI-schema Fields
-  function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number; edit?: boolean }) {
+  function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number; edit?: boolean; view?: boolean }) {
     if(!content && mode == 'read') return null
 
     const fieldSchema = (dataSchema.properties as Record<string, any>)[element.field]
@@ -126,7 +165,7 @@ function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edi
     if (mode === 'read') {
       switch (element.widget) {
         case 'input':
-          return <div className={element.field}>{value}</div>
+          return <div className={element.field}>{ (element.field === 'author_username' && !value) ? 'Anonymous' : value }</div>
         case 'textarea':
           return <div className={element.field}>{value}</div>
         case 'select':
@@ -186,6 +225,7 @@ function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edi
         )
       case 'slider':
         return (
+          element.view ?
           <div className='slider'>
             <label>priority:</label>
             <input
@@ -197,6 +237,7 @@ function DynamicForm({data, mode='edit'}: {data?: ContentWithSchemas; mode: 'edi
             />
             <span>{formData[element.field] || element.min || 1}</span>
           </div>
+          : <></>
         )
       case 'tag-input':
         {

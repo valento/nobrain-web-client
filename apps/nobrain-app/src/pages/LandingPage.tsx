@@ -1,4 +1,4 @@
-import { broker, storage, type User } from '@nx-mono/broker'
+import { storage } from '@nx-mono/broker'
 import '../App.css'
 
 import { UserWidget } from '@nx-mono/user-widget'
@@ -29,14 +29,15 @@ export default function Landing() {
                 <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
               </div>
               
-              <div className='body short'>There are many variations of passages of Lorem Ipsum available,
+              <div className='body'>There are many variations of passages of Lorem Ipsum available,
                 but the majority have suffered alteration in some form, by injected humour, or...
               </div>
             </div>
-            <div className='widget'>
+            <div className='widget theme-sport'>
               <div className='timestamp'>services | Oct 01, 2025</div>
-              <div className="header">Title</div>
-              <div className='body short'>Lorem Ipsum is simply dummy text of the printing and
+              <div className="header">Give me Some Sports here...</div>
+              <div className="deck">by Julian Langestraat, Global Brand Ambassador</div>
+              <div className='body'>Lorem Ipsum is simply dummy text of the printing and
                 typesetting industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley of type and scrambled
               </div>
@@ -46,7 +47,7 @@ export default function Landing() {
             <div className='widget'>
               <div className='timestamp'>services | Oct 01, 2025</div>
               <div className="header">Title</div>
-              <div className='body short'>Lorem Ipsum is simply dummy text of the printing and
+              <div className='body'>Lorem Ipsum is simply dummy text of the printing and
                 typesetting industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley of type and scrambled
               </div>
@@ -58,7 +59,7 @@ export default function Landing() {
                 <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
               </div>
               
-              <div className='body short'>There are many variations of passages of Lorem Ipsum available,
+              <div className='body'>There are many variations of passages of Lorem Ipsum available,
                 but the majority have suffered alteration in some form, by injected humour, or...
               </div>
             </div>
@@ -89,14 +90,14 @@ export default function Landing() {
             </div>
           </div>
           <div className="brick">
-            <div className="widget number">
+            <div className="widget theme-inter">
               <div className='timestamp dark'>services | Oct 01, 2025</div>
-              <div className="header">
-                Lorem Ipsum
-                <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
+              <div className='header'>
+                  <h1>This is a very long story title</h1>
+                  <p>by Julian Langestraat, Global Brand Ambassador</p>
               </div>
               
-              <div className='body short'>There are many variations of passages of Lorem Ipsum available,
+              <div className='body'>There are many variations of passages of Lorem Ipsum available,
                 but the majority have suffered alteration in some form, by injected humour, or...
               </div>
             </div>
@@ -109,7 +110,7 @@ export default function Landing() {
                 <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
               </div>
               
-              <div className='body short'>There are many variations of passages of Lorem Ipsum available,
+              <div className='body'>There are many variations of passages of Lorem Ipsum available,
                 but the majority have suffered alteration in some form, by injected humour, or...
               </div>
             </div>
@@ -122,7 +123,7 @@ export default function Landing() {
                 <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
               </div>
               
-              <div className='body short'>There are many variations of passages of Lorem Ipsum available,
+              <div className='body'>There are many variations of passages of Lorem Ipsum available,
                 but the majority have suffered alteration in some form, by injected humour, or...
               </div>
             </div>
@@ -133,7 +134,7 @@ export default function Landing() {
             <div className="widget">
               <div className='timestamp'>services | Oct 01, 2025</div>
               <div className="header">Title</div>
-              <div className='body short'>Lorem Ipsum is simply dummy text of the printing and
+              <div className='body'>Lorem Ipsum is simply dummy text of the printing and
                 typesetting industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley of type and scrambled
               </div>

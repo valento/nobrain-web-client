@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export default function SearchResult (props: SearchResultItem) {
   return (
-    <Link className='result' to={props.url}>
+    <Link className='result' to={'/read/'+props.id}>
       <p><span className='result-type'>{'type'}</span>&nbsp;&nbsp;{props.title} &#x2192;</p>
       <p className='snippet'>{props.snippet}</p>
     </Link>

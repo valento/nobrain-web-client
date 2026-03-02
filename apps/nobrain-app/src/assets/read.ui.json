@@ -6,11 +6,11 @@
     { "field": "status", "widget": "select" },
     { "field": "widget_size", "widget": "select"},
     { "field": "widget_vertical", "widget": "toggle", "lable": "Vertical layout" },
-    { "field": "subcategory", "widget": "input", "placeholder": "Subcategory", "edit": false },
+    { "field": "subcategory", "widget": "input", "placeholder": "Subcategory", "edit": true },
     { "field": "tags", "widget": "tag-input", "placeholder": "Add tag → Press Enter" },
     { "field": "body", "widget": "textarea", "rows": 15, "placeholder": "Content (Markdown)..." },
     { "field": "author", "widget": "input", "edit": false },
-    { "field": "priority", "widget": "slider", "min": 0, "max": 10 },
+    { "field": "priority", "widget": "slider", "min": 0, "max": 5, "view": false },
     { "field": "seo_keywords", "widget": "tag-input", "placeholder": "SEO keywords" }
   ]
 }
