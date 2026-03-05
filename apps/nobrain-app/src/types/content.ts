@@ -14,6 +14,7 @@ export interface ContentItem {
   slug: string | null
   content_type: string
   category: string
+  category_slug: string
   tags: string[]
 }
 
@@ -45,4 +46,15 @@ export interface ContentWithSchemas {
   // widget_vertical: boolean
   content_type: string
   price: number
+}
+
+export interface BrickItem {
+  brick_type: 'xlarge' | 'large_small' | 'dual_medium' | 'quad_small'
+  items: ContentItem[]
+}
+
+export interface BrickFeedResponse {
+  center: BrickItem[]
+  left: BrickItem[]
+  right: BrickItem[]
 }

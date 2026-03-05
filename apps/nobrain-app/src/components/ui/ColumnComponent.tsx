@@ -1,28 +1,22 @@
 import { useEffect, useState } from 'react'
 import BrickComponent from './BrickComponent'
 import ReadCard from './ReadCard'
-import { chunkIntoBricks } from '@/utils'
+import type { BrickFeedResponse, BrickItem } from '@/types'
 
-import type { ContentItem } from '@/types'
-
-export function ColumnComponent() {
-  const [bricks, setBricks] = useState<ContentItem[][]>([])
+export default function ColumnComponent() {
+  const [bricks, setBricks] = useState<BrickItem[]>([])
 
   useEffect(() => {
-    const fetchContent = async () => {
-      const res = await fetch('/api/content?type=read')
-      const items: ContentItem[] = await res.json()
-      setBricks(chunkIntoBricks(items))
-    }
-    fetchContent()
+    fetch('http://localhost:8000/content/feed')
+      .then(r => r.json())
+      .then((data: BrickFeedResponse) => setBricks(data.center))
   }, [])
 
   return (
     <div className="column">
-      <h1>Order some Bricks here...</h1>
-      {bricks.map((group, i) => (
-        <BrickComponent key={i}>
-          {group.map(item => (
+      {bricks.map((brick, i) => (
+        <BrickComponent key={i} brickType={brick.brick_type}>
+          {brick.items.map(item => (
             <ReadCard key={item.id} item={item} />
           ))}
         </BrickComponent>

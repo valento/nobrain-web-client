@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 import staticDataSchema from '@/assets/read.data.json' with { type: 'json' }
 import staticUiSchema from '@/assets/read.ui.json'
@@ -165,9 +167,16 @@ function DynamicForm(
     if (mode === 'read') {
       switch (element.widget) {
         case 'input':
-          return <div className={element.field}>{ (element.field === 'author_username' && !value) ? 'Anonymous' : value }</div>
+          return <div className={element.field}>
+            { (element.field === 'author_username' && !value) ? 'Anonymous' : value }
+          </div>
         case 'textarea':
-          return <div className={element.field}>{value}</div>
+          return <div className={element.field}>
+            { element.field === 'body' ? 
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {value?.toString()}
+            </ReactMarkdown>: value }
+          </div>
         case 'select':
           return null
         case 'slider':

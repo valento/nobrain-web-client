@@ -1,2 +1,2 @@
 export type { SearchResultItem } from './search'
-export type { ContentItem } from './content'
+export type { ContentItem, BrickFeedResponse, BrickItem, ContentWithSchemas } from './content'

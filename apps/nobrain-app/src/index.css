@@ -62,10 +62,12 @@ button {
   align-items:center;
   margin: 0 .3rem;
   margin-top: 1rem;
-  height: 4rem;
+  height: 3.7rem;
   font-family: Cinzel, serif;
   font-size: 1rem;
-  background-color: rgb(var(--main-dark) / 0.15);
+  border-top:3px double rgb(var(--main-dark) / .4);
+  border-bottom: 3px double rgb(var(--main-dark) / .8);
+  /* background-color: rgb(var(--main-dark) / 0.15); */
 }
 .menu-bar span {
   font-size: small;
@@ -86,7 +88,7 @@ button {
   flex: .8;
   gap: 1rem;
 }
-
+/* ================ BRICKS ================================= */
 .brick {
   container-type: inline-size;
   container-name: brick;
@@ -94,9 +96,28 @@ button {
   background-color: rgba(var(--main-color) / 1);
   gap: .75rem;
 }
+/* children sizing per brick type */
+.brick--xlarge      > * { flex: 1; }
+.brick--dual_medium > * { flex: 1; }
 
+.brick--large_small > *:first-child { flex: 2; }
+.brick--large_small > *:last-child  { flex: 1; }
+
+.brick--quad_small {
+  flex-wrap: wrap;
+  .header h1 {
+    font-size: 1.6rem;
+    line-height: 1.8rem;
+  }
+}
+.brick--quad_small > * { flex: 1 1 45%; }
+/* ========= WIDGETS ======================================= */
 .widget {
   margin-bottom: .8rem;
+  /* cursor:pointer; */
+}
+.widget[onclick] {
+  cursor:pointer;
 }
 
 .brick > .widget {
@@ -109,6 +130,13 @@ button {
   min-height: 28rem;
   background: rgba(0, 0, 0, 0.1);
 }
+
+.widget .body {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 /* for vertically spanned widgets */
 .stack {
   display: flex;
@@ -117,7 +145,8 @@ button {
   flex: 1;
 }
 
-/* ------ Widget elements ------------------------------------------------------ */
+/* ========================================================================== */
+/* ------ Widget elements --------------------------------------------------- */
 .brand {
   display: block;
   width: 100%;
@@ -136,6 +165,7 @@ button {
   margin-left: 1rem;
   font-size: 1.1rem;
 }
+/* --- Default Read-Widget Styles */
 .header {
   margin: .5rem auto;
   margin-bottom: 18px;
@@ -143,28 +173,33 @@ button {
   font-size: 2rem;
   text-align: left;
 }
-.subheader {
+.header h1 {
+  font-size: 2rem;
+  line-height: 2.2rem;
+}
+.header p {
   font-size: 1rem;
   font-family: "Vollkorn", serif;
   text-align: left;
-  line-height: 1rem;
+  line-height: 1.4rem;
 }
 .brand img {
   display: inline;
 }
 .timestamp {
-  margin-bottom: .6rem;
+  margin-bottom: .2rem;
   padding: .15rem;
   text-align: left;
+  text-transform: uppercase;
   font-family: Cinzel, serif;
   font-size: .6rem;
-  text-transform: uppercase;
   background-color: rgb(var(--main-dark) / 0.15);
 }
 .timestamp.dark {
   color: rgba(var(--main-color) / 1);
   background: rgb(var(--main-dark) / 1);
 }
+
 .widget.number {
   font: 4rem "Anton", sans-serif;
 }
@@ -173,6 +208,22 @@ button {
   font-family: "Crimson Pro", serif;
   font-size: 1.1rem;
   text-align: left;
+}
+.body ul, body li {
+  margin-left: 3rem;
+}
+.body {
+  h1,h2,h3 {
+    margin: 1rem 0;
+  }
+  p{
+    margin: .5rem 0;
+  }
+  code {
+    font-size: .7rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
 }
 
 /* ============= FORMS =================================================== */
@@ -442,9 +493,10 @@ article .tag-list, article .subcategory, article .created_at {
 }
 
 .search .footer {
-  margin-top: auto;
-  font-size: small;
-  border-top: 2px solid rgba(var(--main-color) / 1);
+  display: flex;
+  align-items: center;
+  min-height: 2.4rem;
+  border-top: 2px solid rgba(var(--main-color) / .5);
 }
 .search .result {
   display: block;
@@ -485,8 +537,15 @@ h1 {
 
 
 /* ============= THEMES ======================================================================= */
-.theme-sport {
+.brick--quad_small .widget.business h1 {
+  font-size: 1.6rem;
+  line-height: 1.6rem;
+}
+.widget.sport {
   .header {
+    margin: 0;
+  }
+  .header h1 {
     margin-bottom: .6rem;
     font-family: "Racing Sans One", sans-serif;
     font-size: 1.7rem;
@@ -494,24 +553,23 @@ h1 {
     font-style: normal;
     line-height: 1.8rem;
   }
-
-  .deck {
+  .header p {
     margin: 0;
     margin-bottom: 1rem;
     text-align: left;
-    color: rgb(var(--main-dark) / .6);
-    font-family: "Roboto", sans-serif;
+    color: rgb(var(--main-dark) / .8);
+    font-family: "Inter Tight", sans-serif;
     font-size: .9rem;
     font-style: italic;
   }
-
   .body {
-    font-family: "Roboto", sans-serif;
+    font-family: "Inter Tight", sans-serif;
+    font-weight: 200;
     font-size: .9rem;
   }
 }
 
-.theme-inter {
+.widget.business {
   .header {
     margin: 0;
     padding: 1rem 0;
@@ -520,6 +578,7 @@ h1 {
   h1 {
     margin: 1rem;
     text-align: center;
+    line-height: 2.2rem;
     font-size: 2rem;
     font-family: "Inter Tight", sans-serif;
     font-weight: 900;
@@ -554,6 +613,9 @@ h1 {
 /* ============= QUERRIES ================================================================= */
 
 @media only screen and (min-width: 640px) {
+
+  .brick--quad_small  > * { flex: 1; }
+
   .page-grid {
     display: flex;
     flex-direction: row;
@@ -675,9 +737,21 @@ h1 {
 /* ------------- CONTAINERS ------------------------------------------------------------------- */
 
 @container brick (min-width: 200px) {
-  .brick > .widget::after { content: '200'; }
+  /* .brick > .widget::after { content: '200'; } */
+  .brick--large_small, .brick--quad_small {
+    .header h1 {
+      font-size: 1.6rem;
+      line-height: 1.8rem;
+    }
+  }
+  .brick--dual_medium {
+    .header h1 {
+      font-size: 1.75rem;
+      line-height: 1.8rem;
+    }
+  }
 }
 
 @container brick (min-width: 400px) {
-  .brick > .widget::after { content: ''; }
+  /* .brick > .widget::after { content: ''; } */
 }

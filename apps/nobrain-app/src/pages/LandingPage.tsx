@@ -4,7 +4,7 @@ import '../App.css'
 import { UserWidget } from '@nx-mono/user-widget'
 import Brand from '../components/widgets/Brand'
 import SearchWidget from '../components/widgets/SearchWidget'
-import { ColumnComponent } from '@/components/ui/ColumnComponent'
+import ColumnComponent from '@/components/ui/ColumnComponent'
 
 export default function Landing() {
 
@@ -22,21 +22,24 @@ export default function Landing() {
             </div>
           </div>}
           <div className="brick">
+            
             <div className='widget'>
-              <div className='timestamp dark'>services | Oct 01, 2025</div>
+              <div className='timestamp'>services | Oct 01, 2025</div>
               <div className="header">
-                Lorem Ipsum
-                <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
+                <h1>Lorem Ipsum and a lot more</h1>
+                <p>by Julian Langestraat, Global Brand Ambassador</p>
               </div>
-              
               <div className='body'>There are many variations of passages of Lorem Ipsum available,
                 but the majority have suffered alteration in some form, by injected humour, or...
               </div>
             </div>
+
             <div className='widget theme-sport'>
               <div className='timestamp'>services | Oct 01, 2025</div>
-              <div className="header">Give me Some Sports here...</div>
-              <div className="deck">by Julian Langestraat, Global Brand Ambassador</div>
+              <div className="header">
+                <h1>Give me Some Sports here...</h1>
+                <p>by Julian Langestraat, Global Brand Ambassador</p>
+              </div>
               <div className='body'>Lorem Ipsum is simply dummy text of the printing and
                 typesetting industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley of type and scrambled
@@ -93,8 +96,8 @@ export default function Landing() {
             <div className="widget theme-inter">
               <div className='timestamp dark'>services | Oct 01, 2025</div>
               <div className='header'>
-                  <h1>This is a very long story title</h1>
-                  <p>by Julian Langestraat, Global Brand Ambassador</p>
+                <h1>This is a very long story title</h1>
+                <p>by Julian Langestraat, Global Brand Ambassador</p>
               </div>
               
               <div className='body'>There are many variations of passages of Lorem Ipsum available,
