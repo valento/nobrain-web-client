@@ -33,6 +33,7 @@ export interface EventMap {
 
   // UI events
   'ui:show-login': { visible: boolean }
+  'ui:show-user': void
   'ui:next-chapter': void
   'ui:cancel-edit': void
 }

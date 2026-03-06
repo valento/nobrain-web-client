@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm'
 import staticDataSchema from '@/assets/read.data.json' with { type: 'json' }
 import staticUiSchema from '@/assets/read.ui.json'
 import { broker, storage } from '@nx-mono/broker'
-import type { ContentWithSchemas } from '@/types/content';
+import type { Category, ContentWithSchemas } from '@/types/content';
 
 function DynamicForm(
     {
@@ -19,8 +19,11 @@ function DynamicForm(
     }
   ) {
 
+  const API_URL = import.meta.env.VITE_API_NET || 'http://localhost:8000'
+
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
-  const [formData, setFormData] = useState<Record<string, string | number | string[]>>({})
+  const [formData, setFormData] = useState<Record<string, string | number | string[] | null>>({})
+  const [categories, setCategories] = useState<Category[]>([])
   
   const dataSchema = staticDataSchema
   const uiSchema = staticUiSchema
@@ -41,8 +44,9 @@ function DynamicForm(
             month: 'short',
             day: 'numeric'
           }),
-          author: data.author_username,
-          slug: data.slug,
+        author: data.author_username,
+        slug: data.slug,
+        category_id: data.category_id ?? '',
         ...data.metadata
       })
     }
@@ -96,6 +100,11 @@ function DynamicForm(
     return () => broker.off('ui:cancel-edit', refreshForm)
   }, [mode])
 
+  useEffect(() => {
+    fetch(`${API_URL}/categories/`)
+      .then(r => r.json())
+      .then(setCategories)
+  }, [])
 
   function handleChange(field: string, value: string | string[] | number) {
     // console.log(field, value);
@@ -120,9 +129,9 @@ function DynamicForm(
       deck: formData.deck as string,
       slug: formData.slug as string,
       body: formData.body as string,
+      category_id: formData.category_id as number || null,  // added
       metadata: {
         content_type: 'read',
-        read_category: formData.read_category,
         subcategory: formData.subcategory,
         tags: formData.tags,
         priority: formData.priority || 5,
@@ -134,7 +143,7 @@ function DynamicForm(
     }
 
     try {
-      const REQUEST_URL = content?.id? `http://localhost:8000/content/${content?.id}` : 'http://localhost:8000/content/'
+      const REQUEST_URL = content?.id? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
       const REQUEST_METOD = content?.id? 'PUT' : 'POST'
       
       const token = storage.getToken()
@@ -200,7 +209,7 @@ function DynamicForm(
     switch (element.widget) {
       case 'input':
         return (
-          !element.edit? <></>: 
+          (!element.edit || !element.view) ? <></>: 
           <input
             type="text"
             value={value}
@@ -211,6 +220,20 @@ function DynamicForm(
         )
       case 'select':
         {
+          if (element.field === 'category_id') {
+            return (
+              <select
+                value={formData.category_id as number || ''}
+                onChange={e => handleChange('category_id', Number(e.target.value))}
+              >
+                <option>-- category --</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+            )
+          }
+
           const selectValue = value as string || ''
           
           return (

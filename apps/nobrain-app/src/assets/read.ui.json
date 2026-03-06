@@ -1,12 +1,12 @@
 {
   "elements": [
-    { "field": "title", "widget": "input", "placeholder": "Title", "edit": true },
-    { "field": "deck", "widget": "input", "placeholder": "Subtitle/deck", "edit": true },
-    { "field": "read_category", "widget": "select" },
+    { "field": "title", "widget": "input", "placeholder": "Title", "edit": true, "view": true },
+    { "field": "deck", "widget": "input", "placeholder": "Subtitle/deck", "edit": true, "view": true },
+    { "field": "category_id", "widget": "select" },
     { "field": "status", "widget": "select" },
     { "field": "widget_size", "widget": "select"},
     { "field": "widget_vertical", "widget": "toggle", "lable": "Vertical layout" },
-    { "field": "subcategory", "widget": "input", "placeholder": "Subcategory", "edit": true },
+    { "field": "subcategory", "widget": "input", "placeholder": "Subcategory", "edit": true, "view": false },
     { "field": "tags", "widget": "tag-input", "placeholder": "Add tag → Press Enter" },
     { "field": "body", "widget": "textarea", "rows": 15, "placeholder": "Content (Markdown)..." },
     { "field": "author", "widget": "input", "edit": false },

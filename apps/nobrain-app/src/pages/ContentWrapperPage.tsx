@@ -8,6 +8,8 @@ import { useParams } from 'react-router-dom'
 
 export default function ContentWrapperPage({initialMode='read'}:{initialMode: 'read' | 'edit' | 'view'}) {
 
+  const API_URL = import.meta.env.VITE_API_NET || 'http://localhost:8000'  
+
   const { content_id } = useParams()
   const token = storage.getToken()
   // console.log(content_id);
@@ -19,12 +21,12 @@ export default function ContentWrapperPage({initialMode='read'}:{initialMode: 'r
 
   useEffect(() => {
     if (content_id) {
-      fetch(`http://localhost:8000/content/${content_id}`)
+      fetch(`${API_URL}/content/${content_id}`)
         .then(res => res.json())
         .then((data: ContentWithSchemas) => setContent(data))
     }
     if(token && !content_id ) {  // Only for logged-in users
-      fetch(`http://localhost:8000/content/${content_id}/view`, {
+      fetch(`${API_URL}/content/${content_id}/view`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       })

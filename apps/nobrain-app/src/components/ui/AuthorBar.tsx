@@ -13,7 +13,7 @@ export default function AuthorBar(
     setMode(mode)
   }, [mode])
 
-  const handleClick = (_, modus=mode) => {
+  const handleClick = (_:MouseEvent, modus=mode) => {
     setMode(modus)
     if( ['edit','read'].includes(modus)) onEdit(modus)
   }

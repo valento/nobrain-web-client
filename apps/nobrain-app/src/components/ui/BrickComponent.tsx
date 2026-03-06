@@ -3,7 +3,7 @@ interface BrickProps {
   children: React.ReactNode
 }
 
-export default function BrickComponent({ brickType, children }: BrickProps) {
+export default function BrickComponent({ brickType, children, }: BrickProps) {
   return (
     <div className={`brick brick--${brickType}`}>
       {children}

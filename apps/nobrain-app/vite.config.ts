@@ -5,7 +5,8 @@ import path, { resolve } from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   server : {
-    port: 3000
+    port: 3000,
+    allowedHosts: ['.ngrok-free.dev']
   },
   plugins: [
     react({

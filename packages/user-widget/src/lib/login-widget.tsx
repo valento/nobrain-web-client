@@ -3,6 +3,9 @@ import { broker, storage } from '@nx-mono/broker'
 import type { User } from '@nx-mono/broker'
 
 export function LoginWidget() {
+
+  const API_URL = import.meta.env.VITE_API_NET || 'http://localhost:8000'
+
   const [email, setEmail] = useState('')
   const [mode, setMode] = useState<'login' | 'register'>('register')
   const [password, setPassword] = useState('')
@@ -13,7 +16,7 @@ export function LoginWidget() {
     if (!email.includes('@')) return
 
     const timer = setTimeout( async () => {
-      const result =  await fetch(`http://localhost:8000/auth/check-email/${email}`)
+      const result =  await fetch(`${API_URL}/auth/check-email/${email}`)
       const data = await result.json()
       setMode(data.available? 'register' : 'login')
 
@@ -25,7 +28,7 @@ export function LoginWidget() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const URL = mode === 'login'? 'http://localhost:8000/auth/login' : 'http://localhost:8000/auth/register'
+    const URL = mode === 'login'? `${API_URL}/auth/login` : `${API_URL}/auth/register`
 
     try {
         const response = await fetch(URL, {
@@ -67,7 +70,7 @@ export function LoginWidget() {
         </div>
         
         <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Log in'}
+          {loading ? 'Log...' : 'Log in'}
         </button>
       </form>
     </>

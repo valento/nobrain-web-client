@@ -11,7 +11,15 @@ export function UserWidget() {
   )
 
   useEffect(() => {
-    const onToggle = ({ visible }: { visible: boolean }) => setShowLogin(visible)
+    const onToggle = ({ visible }: { visible: boolean }) => {
+      setShowLogin(visible)
+    }
+
+    const onToggleUserWidget = () => {
+      console.log('set widget: ', open)
+      setOpen(prev => !prev)
+    }
+
     const saved = storage.getUser()
     if(saved) setUser(saved)
     
@@ -29,10 +37,13 @@ export function UserWidget() {
     }
 
     broker.on('ui:show-login', onToggle)
+    broker.on('ui:show-user', onToggleUserWidget)
     broker.on('auth:login-success', onLogin)
     broker.on('auth:logout', onLogout)
+
     return () => {
       broker.off('auth:login-success', onLogin)
+      broker.off('ui:show-user', onToggleUserWidget)
       broker.off('auth:logout', onLogout)
     }
   }, [token])

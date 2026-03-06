@@ -4,10 +4,13 @@ import ReadCard from './ReadCard'
 import type { BrickFeedResponse, BrickItem } from '@/types'
 
 export default function ColumnComponent() {
+
+  const API_URL = import.meta.env.VITE_API_NET || 'http://localhost:8000'
+
   const [bricks, setBricks] = useState<BrickItem[]>([])
 
   useEffect(() => {
-    fetch('http://localhost:8000/content/feed')
+    fetch(`${API_URL}/content/feed`)
       .then(r => r.json())
       .then((data: BrickFeedResponse) => setBricks(data.center))
   }, [])
@@ -15,7 +18,7 @@ export default function ColumnComponent() {
   return (
     <div className="column">
       {bricks.map((brick, i) => (
-        <BrickComponent key={i} brickType={brick.brick_type}>
+        <BrickComponent key={i} brickType={brick.brick_type} >
           {brick.items.map(item => (
             <ReadCard key={item.id} item={item} />
           ))}

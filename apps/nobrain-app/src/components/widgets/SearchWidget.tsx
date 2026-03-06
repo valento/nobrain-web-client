@@ -7,28 +7,6 @@ import { searchContent } from '@/services/api'
 export default function SearchWidget () {
   const [results, setResults] = useState<SearchResultItem[]>([])
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null)
-  const dummy_data = {
-    id: 98709,
-    title: 'Lorem Dolores Ipsum',
-    metadata: {'content_type': 'service'},
-    snippet: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, quis nostrum exercitationem ullam corporis suscipit laboriosam',
-    semantic_simliraty: 2135,
-    url: '/read/89743',
-    semantic_similarity: 34,
-    priority: 343,
-    final_score: 34,
-  }
-
-  /** 
-   * id: number
-   *title: string
-   *snippet: string
-   *metadata: Record<string, unknown>
-   *semantic_similarity: number
-   *priority: number
-   *final_score: number
-   *url: string
-  */
 
   const search = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value: string = e.currentTarget.value
