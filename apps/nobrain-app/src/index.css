@@ -86,8 +86,13 @@ button {
 .menu-bar .menu {
   display: flex;
   justify-content: center;
+  align-items: center;
   flex: .8;
   gap: 1rem;
+}
+.menu-bar .menu.icon-mode {
+  flex: 1;
+  gap: 2.9rem;
 }
 /* ================ BRICKS ================================= */
 .brick {
@@ -202,6 +207,7 @@ button {
   font: 4rem "Anton", sans-serif;
 }
 .body {
+  position: relative;
   padding: 1px;
   font-family: "Crimson Pro", serif;
   font-size: 1.1rem;
@@ -217,10 +223,44 @@ button {
   p{
     margin: .5rem 0;
   }
+  pre {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+}
   code {
+    display: block;
+    width: 90%;
     font-size: .7rem;
     word-wrap: break-word;
-    overflow-wrap: break-word;
+  }
+}
+.drawer-link {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 2.5rem;
+}
+.drawer-link :first-child {
+  flex: .05;
+}
+.drawer-link :last-child {
+  flex: .95;
+  display: flex;
+  gap: 3.5rem;
+}
+.button-social {
+  display: flex;
+  margin-top: .3rem;
+  justify-content: center;
+  align-items: center;
+}
+.button-social {
+  span {
+    margin-left: .3rem;
+    font-size: .8rem;
   }
 }
 
@@ -444,6 +484,10 @@ article .deck {
 article .body {
   line-height: 1;
   font-size: 1.3rem;
+}
+article .body a {
+  color: red;
+  font-style: italic;
 }
 article .updated_at {
   position: absolute;

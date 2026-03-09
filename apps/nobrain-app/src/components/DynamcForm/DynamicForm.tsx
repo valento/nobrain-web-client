@@ -114,7 +114,7 @@ function DynamicForm(
 
 
 // Nested JSONB DB-objects (like metadata)
-  function getNestedValue(obj: Record<string, string | number | string[]>, path: string): string | number | string[] | undefined {    
+  function getNestedValue(obj: Record<string, string | number | string[] | null>, path: string): string | number | string[] | undefined {    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const value = path.split('.').reduce((acc: any, part) => acc?.[part], obj)
     return value as string | number | string[] | undefined
@@ -166,7 +166,7 @@ function DynamicForm(
     }
   }
 
-  // UI-schema Fields
+// UI-schema Fields
   function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number; edit?: boolean; view?: boolean }) {
     if(!content && mode == 'read') return null
 
@@ -182,7 +182,14 @@ function DynamicForm(
         case 'textarea':
           return <div className={element.field}>
             { element.field === 'body' ? 
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+              components={{
+                a: ({ href, children }) => (
+                  <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+                )
+              }}
+              remarkPlugins={[remarkGfm]}
+            >
               {value?.toString()}
             </ReactMarkdown>: value }
           </div>
@@ -324,7 +331,7 @@ function DynamicForm(
 
   
 // Render Content
-  return mode == 'edit'? (
+  return mode == 'edit' ? (
     <form className='json-form'
       onSubmit={async (e) => {
         e.preventDefault()
