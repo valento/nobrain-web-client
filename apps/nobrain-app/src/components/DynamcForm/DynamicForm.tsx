@@ -344,7 +344,7 @@ function DynamicForm(
         </div>
       ))}
       <button className='submit' type="submit">Save</button>
-      {mode === 'edit' && formData && data?.id && (
+      {mode === 'edit' && formData && data?.id && formData.parent_id != null && (
         <button
           className='submit secondary'
           type="button"

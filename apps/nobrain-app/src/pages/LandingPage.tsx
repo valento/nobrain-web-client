@@ -5,6 +5,7 @@ import { UserWidget } from '@nx-mono/user-widget'
 import Brand from '../components/widgets/Brand'
 import SearchWidget from '../components/widgets/SearchWidget'
 import ColumnComponent from '@/components/ui/ColumnComponent'
+import { LototechApp } from '@nx-mono/lototech'
 
 export default function Landing() {
 
@@ -19,6 +20,7 @@ export default function Landing() {
           {user && token && <div className="brick">
             <div className='widget number'>
               <div className='timestamp'>services | Oct 01, 2025</div>
+              <LototechApp />
             </div>
           </div>}
           <div className="brick">
@@ -70,10 +72,10 @@ export default function Landing() {
 
         </div>
 
-{/* ======== Middle ================================================================================ */}
+{/* ======== Center ================================================================================ */}
 
         <div className="column center">
-          <div className="brick"><Brand /></div>
+          <div className="brick"><Brand mode={false} /></div>
           <div><UserWidget /></div>
           <div className="brick">
             <div className='widget'><SearchWidget /></div>

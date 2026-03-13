@@ -82,6 +82,15 @@ export default defineConfig([
 ])
 ```
 
+#
+# Add each new custom package/app from library to main-app workspace
+```sh
+nx-mono\apps\nobrain-app> pnpm add @nx-mono/lototech-widget --workspace
+# This adds apps/packages from library as dependencies to package.json, like this:
+# "@nx-mono/broker": "workspace:^",
+# "@nx-mono/lototech-widget": "workspace:^",
+# "@nx-mono/user-widget": "workspace:^",
+```
 
 #
 #

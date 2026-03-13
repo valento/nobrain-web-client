@@ -34,6 +34,9 @@
       "path": "../../packages/user-widget/tsconfig.lib.json"
     },
     {
+      "path": "../../packages/lototech/tsconfig.lib.json"
+    },
+    {
       "path": "../../packages/broker/tsconfig.lib.json"
     }
   ]

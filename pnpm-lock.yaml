@@ -141,6 +141,9 @@ importers:
       '@nx-mono/broker':
         specifier: workspace:^
         version: link:../../packages/broker
+      '@nx-mono/lototech':
+        specifier: workspace:^
+        version: link:../../packages/lototech
       '@nx-mono/user-widget':
         specifier: workspace:^
         version: link:../../packages/user-widget
@@ -213,6 +216,18 @@ importers:
         version: 7.3.1(@types/node@24.10.13)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2)
 
   packages/broker: {}
+
+  packages/lototech:
+    dependencies:
+      '@nx-mono/broker':
+        specifier: workspace:^
+        version: link:../broker
+
+  packages/lototech-widget:
+    dependencies:
+      '@nx-mono/broker':
+        specifier: workspace:^
+        version: link:../broker
 
   packages/user-widget:
     dependencies:

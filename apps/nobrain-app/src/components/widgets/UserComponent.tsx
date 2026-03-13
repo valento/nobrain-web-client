@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 export default function UserComponent({mode=false}: {mode:boolean}) {
   const [token, setToken] = useState<string | null>(null)
   const [user, setUser] = useState<User | null>(null)
-  const [showUser, setShowUser] = useState(false)
+  const [showUser, setShowUser] = useState(mode)
 
   useEffect(() => {
     // Set up listener
