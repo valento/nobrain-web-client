@@ -10,6 +10,9 @@ export interface ContentItem {
   updated_at: string
   slug: string | null
   content_type: string
+  component_name: string | null
+  route_path: string | null
+  app_config: Record<string, any>
   category: string
   category_id: number | null   // added
   category_slug: string | null // was string, nullable for safety

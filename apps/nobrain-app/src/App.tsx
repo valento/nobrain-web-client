@@ -5,6 +5,7 @@ import Landing from './pages/LandingPage'
 // import ContentPage from './pages/ContentPage'
 // import CreateContentPage from './pages/CreateContentPage'
 import ContentWrapperPage from './pages/ContentWrapperPage'
+import { AppPage } from './pages/AppPage'
 
 function App() {
   return (
@@ -13,8 +14,9 @@ function App() {
       {/* <Route path='/:contentType/:category/:id' element={<ContentPage />} /> */}
       <Route path='/read/:content_id' element={<ContentWrapperPage initialMode='read' />} />
       <Route path='/create' element={<ContentWrapperPage initialMode='edit' />} />
-      <Route path='/play' element={''} />
       <Route path='/repeat' element={''} />
+      <Route path='/play/:app_name' element={<AppPage />} />
+      <Route path='/play' element={''} />
     </Routes>
   )
 }

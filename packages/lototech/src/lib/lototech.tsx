@@ -1,5 +1,7 @@
+import '../lototech.css'
 import { useState, useEffect } from 'react'
-import { storage, config } from "@nx-mono/broker"
+import { storage, config } from '@nx-mono/broker'
+import { LototechPeriodicTable } from './components'
 
 interface NumberStat {
   number: number
@@ -12,16 +14,18 @@ interface FrequencyResponse {
   numbers: NumberStat[]
 }
 
-export function LototechApp() {
+export function LototechApp({ mode = 'widget' } : { mode?:'widget' | 'full'}) {
 
   const API_URL = config.apiUrl
 
-  const [mode, setMode] = useState<'widget' | 'tool'>('widget')
+  const [view, setView] = useState<'widget' | 'full'>(mode)
   const [hotNumber, setHotNumber] = useState<NumberStat | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const user = storage.getUser()
+
   useEffect(() => {
-    fetch(`${API_URL}/toto2/stats/frequency`)
+    fetch(`${API_URL}/toto2/stats/frequency?year_from=2010&year_to=2026`)
       .then(res => res.json() as Promise<FrequencyResponse>)
       .then((data: FrequencyResponse) => {
         setHotNumber(data.numbers[0])
@@ -29,24 +33,18 @@ export function LototechApp() {
       .catch(err => console.error('Lototech fetch failed:', err))
       .finally(() => setLoading(false))
   }, [])
-
+  
   if (loading) return <div className="lototech-widget">Loading...</div>
 
-  if (mode === 'widget') {
+  if (mode === 'widget' && user) {
     return (
-      <div className="lototech-widget">
+      <div className='lototech-cyrilic lototech-hot'>{/*animation class: lototech-hot*/}
+        <h1 className=''>🔥T0T0</h1>
         {/* <span className="hot-label">🔥 Hot Number</span> */}
-        <p className="hot-number">{hotNumber?.number}</p>
-        <span className="hot-freq">drawn {hotNumber?.frequency} times</span>
-        <button onClick={() => {
-          const user = storage.getUser()
-          if (user) {
-            setMode('tool')
-          } else {
-            alert('Login required')  // replace with broker event later
-          }
-        }}>
-          Explore →
+        <p className="number">{hotNumber?.number}</p>
+        <p className="body">теглен {hotNumber?.frequency} пъти (за 15г.)</p>
+        <button onClick={() => null}>
+         {/* виж → */}
         </button>
       </div>
     )
@@ -54,10 +52,6 @@ export function LototechApp() {
 
   // Tool mode — placeholder for now
   return (
-    <div className="lototech-tool">
-      <h2>Lototech Toolbox</h2>
-      <p>Full stats coming soon...</p>
-      <button onClick={() => setMode('widget')}>← Back</button>
-    </div>
+    <LototechPeriodicTable />
   )
 }

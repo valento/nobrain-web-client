@@ -10,9 +10,6 @@
       "path": "./packages/user-widget"
     },
     {
-      "path": "./packages/lototech-widget"
-    },
-    {
       "path": "./packages/lototech"
     }
   ]

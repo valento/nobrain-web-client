@@ -13,7 +13,6 @@ export default function ContentWrapperPage({initialMode='read'}:{initialMode: 'r
 
   const { content_id } = useParams()
   const token = storage.getToken()
-  // console.log(content_id);
 
   const [mode, setMode] = useState<'read'|'view'|'edit'>(initialMode)
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
