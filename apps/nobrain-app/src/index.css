@@ -602,13 +602,23 @@ h1 {
   font-weight: 400;
   font-style: normal;
 }
-
+.alumni-inline {
+  font-family: "Alumni Sans Inline One", sans-serif;
+  font-style: normal;
+}
+.cinzel-roman-capita {
+  font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 
 /* ============= THEMES ======================================================================= */
 .brick--quad_small .widget.business h1 {
   font-size: 1.5rem;
   line-height: 1.8rem;
 }
+
 .widget.sport {
   .header {
     margin: 0;

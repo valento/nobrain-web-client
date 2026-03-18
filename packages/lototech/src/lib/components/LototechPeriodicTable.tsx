@@ -15,19 +15,27 @@ interface PeriodData {
   bottom: NumberStat[]
 }
 
+interface Weights {
+  hot: Record<number, number>
+  cold: Record<number, number>
+}
+
 export function LototechPeriodicTable() {
   const [periods, setPeriods] = useState<PeriodData[]>([])
-  const [period, setPeriod] = useState()
   const current_year = new Date().getFullYear()
 
-  function calculateWeights(periods: PeriodData[]): Record<number, number> {
+  function calculateWeights(periods: PeriodData[]): Weights {
       return periods.reduce((weights, period) => {
         period.top.forEach((n, i) => {
           const points = 4 - i  // rank 1=4pts, rank 2=3pts, etc.
-          weights[n.number] = (weights[n.number] || 0) + points
+          weights.hot[n.number] = (weights.hot[n.number] || 0) + points
+        })
+        period.bottom.forEach((n, i) => {
+          const points = 4 - i
+          weights.cold[n.number] = (weights.cold[n.number] || 0) + points
         })
         return weights
-      }, {} as Record<number, number>)
+      }, {hot: {} as Record<number, number>, cold: {} as Record<number, number>})
     }
   
   useEffect(() => {
@@ -63,7 +71,16 @@ export function LototechPeriodicTable() {
 
   return (
     <div className="periodic-table">
-      <h1>Lototech Alchemy</h1>
+      <h1 className='header cyrilic-russo'>
+        T0T0&nbsp;
+        <svg
+          fill="#f7e8df"
+          width="1.4rem"
+          height="1.4rem"
+          viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg">
+          <path d="M128,20A108,108,0,1,0,236,128,108.12186,108.12186,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09562,84.09562,0,0,1,128,212Zm29.50391-87.38477-29.51075,39.37891H152a12,12,0,0,1,0,24H104.39648c-.13281.00488-.26464.00684-.39843.00684a12.00272,12.00272,0,0,1-9.47168-19.36914l43.56543-58.13379a12.00426,12.00426,0,1,0-21.1543-11.165A11.9998,11.9998,0,0,1,94.834,89.9834a36.00408,36.00408,0,1,1,63.01172,34.15234C157.73535,124.29883,157.62207,124.458,157.50391,124.61523Z"/>
+        </svg>&nbsp;Alchemy</h1>
+      <h2 className='cinzel-roman-capita'>═ &nbsp;&nbsp;periodic table&nbsp;&nbsp; ═</h2>
       <div className="period-grid">
         {periods.map(p => (
           <div key={p.label} className="period-column">
@@ -75,7 +92,7 @@ export function LototechPeriodicTable() {
                   stat={Number((n.frequency/p.total_draws).toPrecision(3))}
                   rank={i + 1}
                   type="hot"
-                  weight = {weights[n.number] || 0}
+                  weight = {weights.hot[n.number] || 0}
                 />
               ))}
             </div>
@@ -89,10 +106,10 @@ export function LototechPeriodicTable() {
                 <NumberElement
                   key={n.number}
                   number={n.number}
-                  stat={n.frequency/p.bottom.length}
+                  stat={Number((n.frequency/p.total_draws).toPrecision(3))}
                   rank={i + 1}
                   type="cold"
-                  weight = {weights[n.number] || 0}
+                  weight = {weights.cold[n.number] || 0}
                 />
               ))}
             </div>

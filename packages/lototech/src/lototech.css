@@ -1,3 +1,8 @@
+:root {
+    --main-color: 247 232 223; /*#f7e8df*/
+    --main-dark: 51 51 51; /* #333333 */
+    --main-blue: 40 170 224; /* #28aae0 */
+}
 
 .lototech-hot {
   /* 1. Create the circle shape */
@@ -37,7 +42,21 @@
 .periodic-table {
   padding: 1rem;
 }
-
+.periodic-table {
+  h1 {
+    padding: 1rem 0;
+    padding-left: 2rem;
+    background-color: rgb(var(--main-dark) / .6);
+    color: rgb(var(--main-color));
+    font-size: 2rem;
+  }
+  h2 {
+    margin: 2rem auto;
+    margin-bottom: 1.3rem;
+    font-size: 2rem;
+    border-bottom: 2px solid rgb(var(--main-dark) / .2);
+  }
+}
 .period-headers {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
