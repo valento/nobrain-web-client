@@ -130,6 +130,24 @@
   opacity: 0.8;
 }
 
+.number-trend {
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 0.5rem;
+  background: #333;
+}
+
+.trend-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #f7e8df;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* ===== QUERIES ============================================== */
+
 @media only screen and (min-width: 640px) {
 
   .number-element {

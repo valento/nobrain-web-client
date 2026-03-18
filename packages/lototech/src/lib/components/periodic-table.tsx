@@ -1,7 +1,7 @@
 // packages/lototech/src/lib/periodic-table.tsx
 import { useState, useEffect } from 'react'
 import { config } from '@nx-mono/broker'
-import { NumberElement } from './NumberElement'
+import { NumberElement } from './number-element'
 
 interface NumberStat {
   number: number
