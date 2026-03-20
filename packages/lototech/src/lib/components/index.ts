@@ -2,3 +2,4 @@
 export { NumberElement } from './number-element'
 export { LototechPeriodicTable } from './periodic-table'
 export { NumberTrend } from './number-trend'
+export { ChordDiagram } from './chord-diagram'

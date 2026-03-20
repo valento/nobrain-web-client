@@ -146,6 +146,10 @@
   margin-bottom: 0.25rem;
 }
 
+.chord-diagram {
+  max-width: 400px;
+}
+
 /* ===== QUERIES ============================================== */
 
 @media only screen and (min-width: 640px) {
