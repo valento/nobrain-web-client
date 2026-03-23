@@ -65,7 +65,7 @@ export function NumberTrend({ number, type }: NumberTrendProps) {
 
   return (
     <div className="number-trend">
-      <span className="trend-title">Nr. {number}</span>
+      <span className="trend-title sofia-cyrillic">История на Nr. {number}, годишна</span>
       <svg viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg">
         {/* baseline */}
         <line

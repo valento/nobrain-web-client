@@ -29,7 +29,10 @@ export const AppPage = () => {
       <div className="column">
         <br />
         {/*  */}
-        <NumberTrend number={22} type='hot' />
+        <NumberTrend number={37} type='hot' />
+        <ChordDiagram />
+        <NumberTrend number={24} type='hot' />
+        <NumberTrend number={10} type='hot' />
         {/* <NumberTrend number={12} type='hot' />
         <NumberTrend number={32} type='hot' /> */}
       </div>
@@ -37,7 +40,7 @@ export const AppPage = () => {
         <Component mode='full'/>
       </div>
       <div className="column">
-        <ChordDiagram />
+        
       </div>
     </div>
     </>

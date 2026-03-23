@@ -214,6 +214,7 @@ button {
 }
 .body ul, body li {
   margin-left: 3rem;
+  margin-top: .8rem;
 }
 .body {
   h1,h2,h3 {

@@ -11,6 +11,9 @@
     },
     {
       "path": "./packages/lototech"
+    },
+    {
+      "path": "./packages/polls-app"
     }
   ]
 }

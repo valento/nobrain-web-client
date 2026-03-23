@@ -7,13 +7,14 @@ interface PairData {
   pairs: { partner: number; count: number }[]
 }
 
-const FEATURED_NUMBERS = [37, 36, 10, 18, 34]
+const FEATURED_NUMBERS = [37, 24, 36, 18]
 const TOTAL_NUMBERS = 49
 
 export function ChordDiagram() {
   const [pairData, setPairData] = useState<PairData[]>([])
+  const API_URL = config.apiUrl
 
-  const size = 400
+  const size = 550
   const cx = size / 2
   const cy = size / 2
   const radius = 170
@@ -21,17 +22,17 @@ export function ChordDiagram() {
   useEffect(() => {
     Promise.all(
       FEATURED_NUMBERS.map(n =>
-        fetch(`${config.apiUrl}/toto2/stats/number/${n}/pairs`)
+        fetch(`${API_URL}/toto2/stats/number/${n}/pairs`)
           .then(res => res.json())
       )
     ).then(results => setPairData(results))
   }, [])
 
-  const getPosition = (number: number) => {
+  const getPosition = (number: number, offset=0) => {
     const angle = ((number - 1) / TOTAL_NUMBERS) * 2 * Math.PI - Math.PI / 2
     return {
-      x: cx + radius * Math.cos(angle),
-      y: cy + radius * Math.sin(angle),
+      x: cx + (radius + offset) * Math.cos(angle),
+      y: cy + (radius + offset) * Math.sin(angle),
     }
   }
 
@@ -45,10 +46,65 @@ export function ChordDiagram() {
     return `M ${p1.x} ${p1.y} Q ${ctrlX} ${ctrlY} ${p2.x} ${p2.y}`
   }
 
+  function arcSegment(cx=0, cy=0, outerR=0, innerR=0, startAngle=0, endAngle=0) {
+    const toRad = (deg:number) => (deg - 90) * Math.PI / 180
+
+    const outerStart = {
+      x: cx + outerR * Math.cos(toRad(startAngle)),
+      y: cy + outerR * Math.sin(toRad(startAngle)),
+    }
+    const outerEnd = {
+      x: cx + outerR * Math.cos(toRad(endAngle)),
+      y: cy + outerR * Math.sin(toRad(endAngle)),
+    }
+    const innerStart = {
+      x: cx + innerR * Math.cos(toRad(endAngle)),
+      y: cy + innerR * Math.sin(toRad(endAngle)),
+    }
+    const innerEnd = {
+      x: cx + innerR * Math.cos(toRad(startAngle)),
+      y: cy + innerR * Math.sin(toRad(startAngle)),
+    }
+
+    const largeArc = endAngle - startAngle > 180 ? 1 : 0
+
+    return [
+      `M ${outerStart.x} ${outerStart.y}`,
+      `A ${outerR} ${outerR} 0 ${largeArc} 1 ${outerEnd.x} ${outerEnd.y}`,
+      `L ${innerStart.x} ${innerStart.y}`,
+      `A ${innerR} ${innerR} 0 ${largeArc} 0 ${innerEnd.x} ${innerEnd.y}`,
+      'Z'
+    ].join(' ')
+  }
+
   return (
     <div className="chord-diagram">
-
+      <div className="chord-header sofia-cyrillic">
+        <p>Frequent Number-pairs</p>
+        <br />
+        <p><i>chord-diagram</i></p>
+      </div>
       <svg viewBox={`0 0 ${size} ${size}`} xmlns="http://www.w3.org/2000/svg">
+        <path
+          d={arcSegment(cx, cy, 190, 203, 0, 67)}
+          fill="#682108"
+        />
+        <path
+          d={arcSegment(cx, cy, 190, 203, 68, 139)}
+          fill="#b28473"
+        />
+        <path
+          d={arcSegment(cx, cy, 190, 203, 140, 212)}
+          fill="#8b5c4b"
+        />
+        <path
+          d={arcSegment(cx, cy, 190, 203, 213, 286)}
+          fill="#682108"
+        />
+        <path
+          d={arcSegment(cx, cy, 190, 203, 287, 359)}
+          fill="#d3b1a4"
+        />
 
       {/* Curves connecting pairs */}
         {pairData.map(data =>
@@ -69,7 +125,7 @@ export function ChordDiagram() {
         )}
         {/* All 49 numbers on the circle */}
         {Array.from({ length: TOTAL_NUMBERS }, (_, i) => i + 1).map(n => {
-          const pos = getPosition(n)
+          const pos = getPosition(n, 10)
           const isFeatured = FEATURED_NUMBERS.includes(n)
           return (
             
@@ -78,7 +134,7 @@ export function ChordDiagram() {
                 y={pos.y}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize={isFeatured ? '12' : 6}
+                fontSize={isFeatured ? '14' : 8}
                 fill={isFeatured ? '#333' : '#888'}
               >
                 {n}

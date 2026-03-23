@@ -24,7 +24,7 @@ export default function ContentWrapperPage({initialMode='read'}:{initialMode: 'r
         .then(res => res.json())
         .then((data: ContentWithSchemas) => setContent(data))
     }
-    if(token && !content_id ) {  // Only for logged-in users
+    if(token && !content_id ) {
       fetch(`${API_URL}/content/${content_id}/view`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }

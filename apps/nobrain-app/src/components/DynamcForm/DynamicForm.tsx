@@ -3,9 +3,11 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 import staticDataSchema from '@/assets/read.data.json' with { type: 'json' }
-import staticUiSchema from '@/assets/read.ui.json'
+import readUiSchema from '@/assets/read.ui.json'
+import appUiSchema from '@/assets/app.ui.json'
 import { broker, storage } from '@nx-mono/broker'
 import type { Category, ContentWithSchemas } from '@/types/content';
+import { useParams } from 'react-router-dom'
 
 function DynamicForm(
     {
@@ -20,13 +22,14 @@ function DynamicForm(
   ) {
 
   const API_URL = import.meta.env.VITE_API_NET || 'http://localhost:8000'
+  const {content_type} = useParams() || 'read'
 
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
   const [formData, setFormData] = useState<Record<string, string | number | string[] | null>>({})
   const [categories, setCategories] = useState<Category[]>([])
   
   const dataSchema = staticDataSchema
-  const uiSchema = staticUiSchema
+  const uiSchema = content_type === 'read' ? readUiSchema : appUiSchema
 
   useEffect(() => {
     if (data) {
@@ -112,7 +115,6 @@ function DynamicForm(
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-
 // Nested JSONB DB-objects (like metadata)
   function getNestedValue(obj: Record<string, string | number | string[] | null>, path: string): string | number | string[] | undefined {    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -131,10 +133,11 @@ function DynamicForm(
       body: formData.body as string,
       category_id: formData.category_id as number || null,  // added
       metadata: {
-        content_type: 'read',
-        subcategory: formData.subcategory,
+        content_type: content_type,
+        component_name: formData.component_name,
+        subcategory: formData.subcategory || null,
         tags: formData.tags,
-        priority: formData.priority || 5,
+        priority: formData.priority,
         status: formData.status,
         seo_keywords: formData.seo_keywords
       },

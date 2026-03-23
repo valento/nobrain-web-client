@@ -12,6 +12,7 @@
   "dependencies": {
     "@nx-mono/broker": "workspace:^",
     "@nx-mono/lototech": "workspace:^",
+    "@nx-mono/polls-app": "workspace:^",
     "@nx-mono/user-widget": "workspace:^",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

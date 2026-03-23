@@ -144,6 +144,9 @@ importers:
       '@nx-mono/lototech':
         specifier: workspace:^
         version: link:../../packages/lototech
+      '@nx-mono/polls-app':
+        specifier: workspace:^
+        version: link:../../packages/polls-app
       '@nx-mono/user-widget':
         specifier: workspace:^
         version: link:../../packages/user-widget
@@ -223,7 +226,7 @@ importers:
         specifier: workspace:^
         version: link:../broker
 
-  packages/lototech-widget:
+  packages/polls-app:
     dependencies:
       '@nx-mono/broker':
         specifier: workspace:^
