@@ -1,15 +1,34 @@
 {
   "elements": [
-    { "field": "title", "widget": "input", "placeholder": "AppName", "edit": true, "view": true },
-    { "field": "deck", "widget": "input", "placeholder": "some subheader", "edit": true, "view": true },
-    { "field": "bulgarian ?", "widget": "toggle", "options": ["en", "bg"], "labels": ["English", "Български"] },
-    { "field": "status", "widget": "select" },
-    { "field": "component_name", "widget": "input", "placeholder": "app-component-name", "edit": true, "view": true },
-    { "field": "tags", "widget": "tag-input", "placeholder": "Add tag → Press Enter" },
-    { "field": "body", "widget": "textarea", "rows": 10, "placeholder": "Widget context text..." },
-    { "field": "created_at", "widget": "" },
-    { "field": "updated_at", "widget": "" },
-    { "field": "priority", "widget": "slider", "min": 0, "max": 10 },
-    { "field": "widget_vertical", "widget": "toggle", "label": "Vertical card layout" }
+    { "field": "title", "widget": "input", "placeholder": "Title", "edit": true, "view": true },
+    { "field": "deck", "widget": "input", "placeholder": "Subtitle", "edit": true, "view": true },
+    { "field": "slug", "widget": "input", "edit": true, "view": true },
+    { "field": "app_id", "widget": "app-select" },
+    { "field": "widget_size", "widget": "select", "options": ["small", "medium", "large"] },
+    {
+      "field": "poll_type",
+      "widget": "select",
+      "options": ["single", "binary", "rating"],
+      "condition": { "field": "app_id", "component": "PollsApp" }
+    },
+    {
+      "field": "question",
+      "widget": "input", "edit": true, "view": true,
+      "placeholder": "The Question of your poll here...",
+      "condition": { "field": "app_id", "component": "PollsApp" }
+    },
+    {
+      "field": "options",
+      "widget": "polls-options",
+      "condition": {
+        "field": "app_id", "component": "PollsApp",
+        "also": { "field": "poll_type", "value": "single" }
+      }
+    },
+    {
+      "field": "closes_at",
+      "widget": "datetime",
+      "condition": { "field": "app_id", "component": "PollsApp" }
+    }
   ]
 }

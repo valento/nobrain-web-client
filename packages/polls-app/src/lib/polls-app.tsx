@@ -1,5 +1,6 @@
 // packages/polls-widget/src/lib/polls-widget.tsx
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { config, storage } from '@nx-mono/broker'
 import '../polls.css'
 
@@ -26,27 +27,32 @@ interface Poll {
 }
 
 interface PollsAppProps {
-  pollId: number
+  contentSlug?: string
+  mode?: 'widget' | 'full'
 }
 
-export function PollsApp({ contentId, mode='widget' }: {contentId: PollsAppProps, mode?: 'full' | 'widget'}) {
+export function PollsApp({ contentSlug, mode='widget' }: PollsAppProps) {
+
+  const navigate = useNavigate()
+
   const [poll, setPoll] = useState<Poll | null>(null)
   const [loading, setLoading] = useState(true)
   const [voted, setVoted] = useState(false)
   const [ratingValue, setRatingValue] = useState(5)
 
   useEffect(() => {
-    const token = storage.getToken()
-    fetch(`${config.apiUrl}/polls/${contentId}`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
-      .then(res => res.json() as Promise<Poll>)
-      .then(data => {
-        setPoll(data)
-        setVoted(data.user_voted)
+    if (contentSlug) {
+      const token = storage.getToken()
+      fetch(`${config.apiUrl}/polls/by-content/${contentSlug}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       })
-      .finally(() => setLoading(false))
-  }, [contentId])
+        .then(res => res.json() as Promise<Poll>)
+        .then(data => {
+          setPoll(data)
+          setLoading(false)
+        })
+    }
+  }, [contentSlug])
 
   const handleVote = async (optionId: number) => {
     const token = storage.getToken()
@@ -55,7 +61,7 @@ export function PollsApp({ contentId, mode='widget' }: {contentId: PollsAppProps
       return
     }
 
-    const res = await fetch(`${config.apiUrl}/polls/${pollId}/vote`, {
+    const res = await fetch(`${config.apiUrl}/polls/${poll?.id}/vote`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -71,14 +77,14 @@ export function PollsApp({ contentId, mode='widget' }: {contentId: PollsAppProps
     }
   }
 
+  if ( mode === 'widget' ) {
+    return (
+      <div className="polls-widget" onClick={() => navigate('/play/PollsApp')}>Poll Widget</div>
+    )
+  }
   if (loading) return <div className="polls-widget">Loading...</div>
   if (!poll) return <div className="polls-widget">Poll not found</div>
 
-  if ( mode === 'widget' ) {
-    return (
-      <div>Poll Widget</div>
-    )
-  }
 
   return (
     <div className={`polls-widget polls-${poll.poll_type}`}>

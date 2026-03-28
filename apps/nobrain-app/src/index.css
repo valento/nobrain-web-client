@@ -289,50 +289,102 @@ input[type=text] {
   padding-top: 1rem;
   /* border-top: 6px solid rgb(var(--main-dark) / 1); */
 }
-.json-form input {
-  border-radius: .5rem;
-  margin: .5rem;
-  border: 1px solid rgb(var(--main-dark) / .5);
-  /* pointer-events: none; */
+.json-form {
+
+  input {
+    border-radius: .5rem;
+    margin: .5rem;
+    border: 1px solid rgb(var(--main-dark) / .5);
+    /* pointer-events: none; */
+  }
+  select {
+    margin: 0 5%;
+    min-width: 50%;
+    margin-bottom: .5rem;
+    padding: .3rem;
+    font-size: .9rem;
+    border: 1px solid rgb(var(--main-dark) / .5);
+    border-radius: 4px;
+  }
+  textarea {
+    width: 90%;
+    padding: 1rem;
+    border: 1px solid rgb(var(--main-dark) / .5);
+    border-radius: 4px;
+  }
+  .submit {
+    min-width: 40%;
+    display: block;
+    margin: 2rem auto;
+    padding: .5rem .2rem;
+    border: 3px solid rgb(var(--main-dark) / .5);
+    border-radius: 4px;
+    color: rgba(var(--main-color) / 1);
+    font-size: 1.5rem;
+    background-color: rgb(var(--main-dark) / 1);
+  }
+  .add-button {
+    position: relative;
+    width: 60%;
+    height: 2.4rem;
+    margin: .5rem auto;
+    padding: .5rem 0;
+    border: 1px solid rgb(var(--main-dark) / 1);
+    border-radius: 3px;
+    background-color: rgb(var(--main-color) / .8);
+    color: rgba(var(--main-dark) / 1);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .slug {
+    display: none;
+  }
+  .select-box {
+    display: inline-block;
+    width: 50%;
+  }
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    padding: 0 1rem;
+  }
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0rem 0.3rem;
+    font-size: 0.85rem;
+    cursor: default;
+  }
+  .slider {
+    margin: 1.5rem auto;
+  }
 }
-.json-form .select-box {
-  display: inline-block;
-  width: 50%;
+
+.polls-options-widget {
+  margin: auto;
+  width: 97%;
 }
-.json-form select {
-  margin: 0 5%;
-  min-width: 50%;
-  margin-bottom: .5rem;
-  padding: .3rem;
-  font-size: .9rem;
-  border: 1px solid rgb(var(--main-dark) / .5);
-  border-radius: 4px;
+.polls-options-widget {
+  input {
+    padding: .8rem !important;
+    background-color: rgb(255 255 255 / .6);
+  }
 }
-.json-form textarea {
-  width: 90%;
-  padding: 1rem;
-  border: 1px solid rgb(var(--main-dark) / .5);
-  border-radius: 4px;
+
+.button-icon {
+  position: absolute;
+  left: -2px;
+  top: -2px;
 }
+
 .json-form .title, .json-form .deck {
   font: inherit;
 }
 .json-form .tags, .json-form .subcategory {
   font-style: italic;
-}
-.json-form .tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  padding: 0 1rem;
-}
-.json-form .tag-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0rem 0.3rem;
-  font-size: 0.85rem;
-  cursor: default;
 }
 .json-form .tag-chip button {
   padding: .5rem 1rem;
@@ -342,13 +394,9 @@ input[type=text] {
   font-size: 1rem;
   line-height: 1;
 }
-.json-form .slider {
-  margin: 1.5rem auto;
-}
 .json-form .slider input {
   width: 85%;
 }
-
 .json-form .slider label {
   display: block;
   white-space: nowrap;
@@ -357,22 +405,9 @@ input[type=text] {
   font-size: .9rem;
   font-style: italic;
 }
-.json-form .submit {
-  min-width: 40%;
-  margin: .5rem;
-  padding: .5rem .2rem;
-  border: 3px solid rgb(var(--main-dark) / .5);
-  border-radius: 4px;
-  color: rgba(var(--main-color) / 1);
-  font-size: 1.5rem;
-  background-color: rgb(var(--main-dark) / 1);
-}
 .submit.secondary {
   background: none;
   color: rgb(var(--main-dark) / 1);
-}
-.json-form .slug {
-  display: none;
 }
 
 .login-form {
@@ -381,34 +416,37 @@ input[type=text] {
   text-align: left;
   align-items: left;
 }
-.login-form input {
-  width: 100%;
-  padding: .8rem .9rem;
-  border-radius: 1rem;
-  border: 2px solid rgb(var(--main-dark) / 1);
-  background-color: rgb(255 255 255 / .6);
-  color: rgb(var(--main-dark) / 1);
+.login-form {
+  input {
+    width: 100%;
+    padding: .8rem .9rem;
+    border-radius: 1rem;
+    border: 2px solid rgb(var(--main-dark) / 1);
+    background-color: rgb(255 255 255 / .6);
+    color: rgb(var(--main-dark) / 1);
+  }
+  label {
+    display: block;
+    white-space: nowrap;
+    margin: .3rem .5rem .2rem 1rem;
+    font-size: .8rem;
+    font-style: italic;
+  }
+  button {
+    width: 80%;
+    margin: 1rem auto;
+    padding: .8rem 1rem;
+    border-radius: 1rem;
+    border: 2px solid rgb(var(--main-dark) / 1);
+    background-color: rgb(var(--main-dark) / .8);
+    color: rgba(var(--main-color) / 1);
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    /* font */
+  }
 }
-.login-form label {
-  display: block;
-  white-space: nowrap;
-  margin: .3rem .5rem .2rem 1rem;
-  font-size: .8rem;
-  font-style: italic;
-}
-.login-form button {
-  width: 80%;
-  margin: 1rem auto;
-  padding: .8rem 1rem;
-  border-radius: 1rem;
-  border: 2px solid rgb(var(--main-dark) / 1);
-  background-color: rgb(var(--main-dark) / .8);
-  color: rgba(var(--main-color) / 1);
-  font-size: 1.1rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  /* font */
-}
+
 
 .user-widget {
   padding: 0 1rem;
@@ -701,6 +739,7 @@ h1 {
   }
   .column {
     flex: 1;
+    padding-top: .5rem;
   }
   .column.center {
     flex: 2;
@@ -758,11 +797,23 @@ h1 {
     line-height: 1.6;
   }
   
-  .json-form .slider input {
-    width: 80%;
-  }
-  .json-form .submit {
-    min-width: 30%;
+  .json-form {
+    .slider input {
+      width: 80%;
+    }
+    .add-button {
+      width: 30%;
+    }
+    .submit {
+      display: block;
+      margin: 2rem auto;
+      min-width: 30%;
+    }
+    .polls-options-widget {
+      display: block;
+      margin: auto;
+      width: 98%;
+    }
   }
 
   .timestamp {

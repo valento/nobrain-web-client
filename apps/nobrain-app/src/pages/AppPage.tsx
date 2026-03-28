@@ -1,48 +1,33 @@
 import Brand from '@/components/widgets/Brand'
-import { appRegistry } from '@/registry/appRegistry'
 import { UserWidget } from '@nx-mono/user-widget'
 import { useParams } from 'react-router-dom'
-import { ChordDiagram, NumberTrend } from '../../../../packages/lototech/src/lib/components'
+import { appRegistry } from '@/registry/appRegistry'
 
 export const AppPage = () => {
+
   const { app_name } = useParams()
-  const Component = appRegistry[app_name || '']
+  const Component = appRegistry[app_name?.concat('Page') || '']
 
   return (
     <>
-    <div className="page-grid">
-      <div className="column">
-        <div className="brick brick--dual-medium">
+      <div className="page-grid">
+        <div className="column">
+          <div className="brick brick--dual-medium">
+            {/*  */}
+          </div>
         </div>
+        <div className="column">
+          <div className="brick"><Brand mode={false} /></div>
+          <div><UserWidget /></div>
+          
+        </div>
+        <div className="column" />
       </div>
-      <div className="column">
-        <div className="brick"><Brand mode={false} /></div>
-        <div><UserWidget /></div>
-        
-      </div>
-      <div className="column" />
-    </div>
 
-    {/* ====================================================================== */}
-    {/* ============= Your APP here... ======================================= */}
-    <div className="page-grid">
-      <div className="column">
-        <br />
-        {/*  */}
-        <NumberTrend number={37} type='hot' />
-        <ChordDiagram />
-        <NumberTrend number={24} type='hot' />
-        <NumberTrend number={10} type='hot' />
-        {/* <NumberTrend number={12} type='hot' />
-        <NumberTrend number={32} type='hot' /> */}
-      </div>
-      <div className="column center">
-        <Component mode='full'/>
-      </div>
-      <div className="column">
-        
-      </div>
-    </div>
+      {/* ====================================================================== */}
+      {/* ===== your full app page here... ================================== */}
+
+      <Component />
     </>
   )
 }

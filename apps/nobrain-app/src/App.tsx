@@ -2,8 +2,6 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 
 import Landing from './pages/LandingPage'
-// import ContentPage from './pages/ContentPage'
-// import CreateContentPage from './pages/CreateContentPage'
 import ContentWrapperPage from './pages/ContentWrapperPage'
 import { AppPage } from './pages/AppPage'
 

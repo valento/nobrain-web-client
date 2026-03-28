@@ -24,13 +24,16 @@ export default function ContentWrapperPage({initialMode='read'}:{initialMode: 'r
         .then(res => res.json())
         .then((data: ContentWithSchemas) => setContent(data))
     }
-    if(token && !content_id ) {
-      fetch(`${API_URL}/content/${content_id}/view`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-    }
   }, [content_id])
+
+  useEffect(() => {
+  if (token && content && mode === 'read') {
+    fetch(`${API_URL}/content/${content.id}/view`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+  }
+}, [content?.id])
 
   useEffect(() => {
     const onLogin = ({ user }: { token: string; user: User }) => setUser(user)
@@ -57,8 +60,7 @@ export default function ContentWrapperPage({initialMode='read'}:{initialMode: 'r
       <div className="column">
         <div className="brick">
           <div className='widget'>
-            <div className='timestamp'>services | Oct 01, 2025</div>
-            <p>ID: {user?.id}</p>
+            - - User Tools - -
           </div>
         </div>
       </div>
@@ -84,21 +86,7 @@ export default function ContentWrapperPage({initialMode='read'}:{initialMode: 'r
         </div>
       </div>
 
-      {user?.id && <div className="column">
-        <div className="brick">
-          <div className='widget .theme-sport'>
-            <div className='timestamp'>services | Oct 01, 2025</div>
-          </div>
-          <div className='widget number'>
-            <div className='timestamp dark'>tech | Nov 21, 2025</div>
-          </div>
-        </div>
-        <div className="brick">
-          <div className='widget number'>
-            <div className='timestamp'>services | Oct 01, 2025</div>
-          </div>
-        </div>
-      </div>}
+      {user?.id && <div className="column"> - - Column - -</div>}
 
     </div>
     

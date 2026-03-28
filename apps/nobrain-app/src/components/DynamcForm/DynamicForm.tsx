@@ -8,8 +8,52 @@ import appUiSchema from '@/assets/app.ui.json'
 import { broker, storage } from '@nx-mono/broker'
 import type { Category, ContentWithSchemas } from '@/types/content';
 import { useParams } from 'react-router-dom'
+import { PollsOptionsWidget, type PollOption } from '../ui/polls-options.widget'
 
-function DynamicForm(
+interface AppRegistryEntry {
+  "id": number
+  "package_name": string
+  "component_name": string
+  "route_path": string
+}
+
+type UIElement = {
+  field: string
+  widget: string
+  placeholder?: string
+  rows?: number
+  min?: number
+  max?: number
+  edit?: boolean
+  view?: boolean
+  condition?: {
+    field: string
+    component?: string
+    value?: string
+    also?: { field: string; value: string }
+  }
+}
+
+
+/**
+ * 
+ * Renders full content pages
+ * in READ or EDIT or CREATE modes.
+ * 
+ * CREATE takes /create/{apps | reads} mode from URL and
+ * renders empty Form given the uiSchema/dataSchema for field-types
+ * and default data
+ * 
+ * EDIT takes content_id from URL and renders Form
+ * given uiSchema for field-types and data from DB and dataSchema
+ * 
+ * READ renders just a page with content_id data
+ * 
+ */
+
+
+
+export default function DynamicForm (
     {
       data,
       mode='edit',
@@ -25,11 +69,12 @@ function DynamicForm(
   const {content_type} = useParams() || 'read'
 
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
-  const [formData, setFormData] = useState<Record<string, string | number | string[] | null>>({})
+  const [formData, setFormData] = useState<Record<string, string | number | string[] | PollOption[] | null>>({})
   const [categories, setCategories] = useState<Category[]>([])
+  const [registeredApps, setRegisteredApps] = useState<AppRegistryEntry[]>([])
   
   const dataSchema = staticDataSchema
-  const uiSchema = content_type === 'read' ? readUiSchema : appUiSchema
+  const uiSchema = content_type === 'reads' ? readUiSchema : appUiSchema
 
   useEffect(() => {
     if (data) {
@@ -109,68 +154,48 @@ function DynamicForm(
       .then(setCategories)
   }, [])
 
+  // fetch on mount
+  useEffect(() => {
+    fetch(`${API_URL}/apps/registry`).then(r => r.json()).then(setRegisteredApps)
+  }, [])
+
   function handleChange(field: string, value: string | string[] | number) {
-    // console.log(field, value);
-    
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
 // Nested JSONB DB-objects (like metadata)
-  function getNestedValue(obj: Record<string, string | number | string[] | null>, path: string): string | number | string[] | undefined {    
+  function getNestedValue(obj: Record<string, string | number | string[] | PollOption[] | null>, path: string): string | number | string[] | undefined {    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const value = path.split('.').reduce((acc: any, part) => acc?.[part], obj)
     return value as string | number | string[] | undefined
   }
 
-  async function handleSubmit(e: React.SubmitEvent) {
-    e.preventDefault()
-    
-    // Restructure formData to match API expectation
-    const payload = {
-      title: formData.title as string,
-      deck: formData.deck as string,
-      slug: formData.slug as string,
-      body: formData.body as string,
-      category_id: formData.category_id as number || null,  // added
-      metadata: {
-        content_type: content_type,
-        component_name: formData.component_name,
-        subcategory: formData.subcategory || null,
-        tags: formData.tags,
-        priority: formData.priority,
-        status: formData.status,
-        seo_keywords: formData.seo_keywords
-      },
-      parent_id: formData.parent_id,
-      author_id: storage.getUser()?.id as number || 1,
+  const shouldRender = (element: UIElement): boolean => {    
+    if (!element.condition) return true
+
+    const { field, component, also } = element.condition
+    console.log( 'Should render?: ' , also?.value)
+
+
+    if (component) {
+      const selectedApp = registeredApps.find(a => a.id === formData[field])
+      if (selectedApp?.component_name !== component) return false
     }
 
-    try {
-      const REQUEST_URL = content?.id? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
-      const REQUEST_METOD = content?.id? 'PUT' : 'POST'
-      
-      const token = storage.getToken()
-      const response = await fetch(REQUEST_URL, {
-        method: REQUEST_METOD,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
-      })
-      
-      if (response.ok) {
-        const updatedContent = await response.json()
-        setContent(updatedContent)
-        onSaveSuccess()
-      }
-    } catch (error) {
-      console.error('Failed to create content:', error)
-    }
+    if (also && formData[also.field] !== also?.value) return false
+    return true
   }
 
 // UI-schema Fields
-  function renderField(element: { field: string; widget: string; placeholder?: string; rows?: number;  min?: number; max?: number; edit?: boolean; view?: boolean }) {
+  function renderField(element: { field: string; widget: string;
+      placeholder?: string;
+      rows?: number;
+       min?: number;
+      max?: number;
+      edit?: boolean;
+      view?: boolean;
+      options?: string[]
+    }) {
     if(!content && mode == 'read') return null
 
     const fieldSchema = (dataSchema.properties as Record<string, any>)[element.field]
@@ -198,6 +223,7 @@ function DynamicForm(
           </div>
         case 'select':
           return null
+        
         case 'slider':
           return null
         case 'tag-input':
@@ -245,6 +271,8 @@ function DynamicForm(
           }
 
           const selectValue = value as string || ''
+          const options = element.options ?? fieldSchema?.enum  // ← uiSchema first, dataSchema fallback
+
           
           return (
             <select id={selectValue} 
@@ -253,11 +281,30 @@ function DynamicForm(
             onChange={e => handleChange(element.field, e.target.value)}
             >
               <option>-- {element.field.replace('_',' ')} --</option>
-              {fieldSchema?.enum?.map((opt: string) => 
+              {options.map((opt: string) => 
                 <option key={opt} value={opt} >{opt}</option>
               )}
             </select>
         )}
+      case 'polls-options':
+          return (
+            <PollsOptionsWidget
+              value = {formData[element.field] || []}
+              onChange={val => handleChange(element.field, val)}
+            />
+          )
+      case 'app-select':
+        return (
+          <select
+            value={formData.app_id as number || ''}
+            onChange={e => handleChange('app_id', Number(e.target.value))}
+          >
+            <option value=''>-- select app --</option>
+            {registeredApps.map(app => (
+              <option key={app.id} value={app.id}>{app.component_name}</option>
+            ))}
+          </select>
+        )
       case 'toggle':
         return (
           <label>
@@ -327,13 +374,103 @@ function DynamicForm(
             onChange={e => handleChange(element.field, e.target.value)}
           />
         )
+      case 'datetime':
+        return
       default:
         return <p className='hideme'>Unknown widget: {element.field}</p>
     }
   }
 
-  
+// ========================================================================
+// Submit Data
+// ========================================================================
+
+  async function handleSubmit(e: React.SubmitEvent) {
+    e.preventDefault()
+    
+    // Apps Data POST
+    const selectedApp = registeredApps.find(a => a.id === formData.app_id)
+    const isPollsApp = selectedApp?.component_name === 'PollsApp'
+
+    if (isPollsApp) {
+      try {
+        const token = storage.getToken()
+        const response = await fetch(`${API_URL}/polls/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            title: formData.title,
+            slug: formData.slug,
+            deck: formData.deck,
+            app_id: formData.app_id,
+            widget_size: formData.widget_size || 'medium',
+            question: formData.question,
+            poll_type: formData.poll_type,
+            options: formData.options || [],
+            closes_at: formData.closes_at || null,
+          })
+        })
+        if (response.ok) {
+          const created = await response.json()
+          setContent(created)
+          onSaveSuccess()
+        }
+      } catch (error) {
+        console.error('Failed to create poll:', error)
+      }
+      return
+    }
+
+    // Restructure formData to match API expectation
+    const payload = {
+      title: formData.title as string,
+      deck: formData.deck as string,
+      slug: formData.slug as string,
+      body: formData.body as string,
+      category_id: formData.category_id as number || null,  // added
+      metadata: {
+        content_type: content_type,
+        component_name: formData.component_name,
+        subcategory: formData.subcategory || null,
+        tags: formData.tags,
+        priority: formData.priority,
+        status: formData.status,
+        seo_keywords: formData.seo_keywords
+      },
+      parent_id: formData.parent_id,
+      author_id: storage.getUser()?.id as number || 1,
+    }
+
+    try {
+      const REQUEST_URL = content?.id? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
+      const REQUEST_METOD = content?.id? 'PUT' : 'POST'
+      
+      const token = storage.getToken()
+      const response = await fetch(REQUEST_URL, {
+        method: REQUEST_METOD,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      })
+      
+      if (response.ok) {
+        const updatedContent = await response.json()
+        setContent(updatedContent)
+        onSaveSuccess()
+      }
+    } catch (error) {
+      console.error('Failed to create content:', error)
+    }
+  }
+
+// ==============================================================
 // Render Content
+
   return mode == 'edit' ? (
     <form className='json-form'
       onSubmit={async (e) => {
@@ -341,10 +478,13 @@ function DynamicForm(
         handleSubmit(e)
       }}>
       {uiSchema.elements.map(el => (
-        <div className={el.widget==='select' || el.widget==='toggle'? 'select-box' : ''} key={el.field} >
-          {/* <label>{el.field}</label> */}
-          {renderField(el)}
-        </div>
+        (shouldRender(el)) &&
+        (
+          <div className={el.widget==='select' || el.widget==='toggle' ? 'select-box' : ''} key={el.field} >
+            {/* <label>{el.field}</label> */}
+            {renderField(el)}
+          </div>
+        )
       ))}
       <button className='submit' type="submit">Save</button>
       {mode === 'edit' && formData && data?.id && formData.parent_id != null && (
@@ -368,5 +508,3 @@ function DynamicForm(
     </article>
   )
 }
-
-export default DynamicForm
