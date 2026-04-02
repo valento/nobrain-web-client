@@ -41,7 +41,7 @@ export function LototechApp({ mode = 'widget' } : { mode?:'widget' | 'full'}) {
 
   if (mode === 'widget') {
     return (
-      <div className='lototech-cyrilic lototech-hot' onClick={() => navigate('/play/LototechApp')}>
+      <div className='lototech-cyrilic lototech-hot' onClick={() => navigate('/play/LototechApp/22')}>
         <h1 className=''>
           <svg version="1.1"
             id="svg2"

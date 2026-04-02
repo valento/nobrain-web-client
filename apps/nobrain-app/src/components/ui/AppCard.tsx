@@ -7,7 +7,7 @@ export function AppCard({ item }: { item: ContentItem }) {
 
   return (
     <div className="app-card widget">
-      <Component mode='widget' contentSlug = {item.slug} />
+      <Component mode='widget' item = {item} />
     </div>
   )
 }

@@ -1,60 +1,86 @@
-.polls-widget {
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: white;
+.poll-results {
+  margin-top: 1.5rem;
 }
 
-.poll-question {
-  margin: 0 0 0.25rem 0;
+.poll-option-row {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.poll-option-left {
+  flex: 2;
+}
+
+.poll-option-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.poll-option-text {
+  font-weight: 500;
+}
+.poll-votes {
+  font-size: .8rem;
+  color: #999;
+}
+
+.poll-option-pct {
+  font-weight: 700;
   font-size: 1.1rem;
 }
 
-.poll-votes {
-  font-size: 0.8rem;
-  color: #888;
+.poll-option-right {
+  flex: 1;
+  display: flex;
+  justify-content: right;
 }
 
-.poll-results {
-  margin: 0.75rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.poll-option-right button {
+  padding: 0.4rem 2rem;
+  border: 1px solid #333;
+  background: rgb(var(--main-dark)/.1);
+  cursor: pointer;
+  border-radius: 1.3rem;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
-.poll-bar-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  margin-bottom: 0.15rem;
+.poll-option-right button:hover {
+  background: #333;
+  color: white;
 }
 
 .poll-bar {
-  height: 8px;
-  background: #eee;
-  border-radius: 4px;
+  height: 3px;
+  background: rgb(255 255 255 / .5);
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .poll-bar-fill {
   height: 100%;
-  background: #ff4500;
-  border-radius: 4px;
+  background: #333;
+  border-radius: 3px;
   transition: width 0.3s ease;
 }
 
-.poll-binary, .poll-single {
-  display: flex;
-  gap: 0.5rem;
+.poll-voted-mark {
+  color: #4caf50;
+  font-size: 1.2rem;
 }
 
-.poll-rating {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.cyrilic-title {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
 }
 
-.poll-voted, .poll-closed {
-  font-size: 0.8rem;
-  color: #888;
+.roboto-1 {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
 }

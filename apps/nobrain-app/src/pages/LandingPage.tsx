@@ -6,7 +6,7 @@ import Brand from '../components/widgets/Brand'
 import SearchWidget from '../components/widgets/SearchWidget'
 import ColumnComponent from '@/components/ui/ColumnComponent'
 import { useEffect, useState } from 'react'
-import type { BrickFeedResponse, BrickItem, ContentItem } from '@/types'
+import type { BrickFeedResponse } from '@/types'
 
 export default function Landing() {
 

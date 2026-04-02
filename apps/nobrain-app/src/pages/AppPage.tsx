@@ -5,7 +5,7 @@ import { appRegistry } from '@/registry/appRegistry'
 
 export const AppPage = () => {
 
-  const { app_name } = useParams()
+  const { app_name, instance_slug } = useParams()
   const Component = appRegistry[app_name?.concat('Page') || '']
 
   return (
@@ -27,7 +27,7 @@ export const AppPage = () => {
       {/* ====================================================================== */}
       {/* ===== your full app page here... ================================== */}
 
-      <Component />
+      <Component instance_slug={instance_slug} mode='full' />
     </>
   )
 }

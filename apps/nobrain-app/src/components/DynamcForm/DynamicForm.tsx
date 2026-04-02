@@ -66,7 +66,8 @@ export default function DynamicForm (
   ) {
 
   const API_URL = import.meta.env.VITE_API_NET || 'http://localhost:8000'
-  const {content_type} = useParams() || 'read'
+  const {content_type} = useParams() || 'reads'
+  const {content_id} = useParams() || 'reads'
 
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
   const [formData, setFormData] = useState<Record<string, string | number | string[] | PollOption[] | null>>({})
@@ -74,8 +75,10 @@ export default function DynamicForm (
   const [registeredApps, setRegisteredApps] = useState<AppRegistryEntry[]>([])
   
   const dataSchema = staticDataSchema
-  const uiSchema = content_type === 'reads' ? readUiSchema : appUiSchema
-
+  const uiSchema = content_type === 'reads' || content_id ? readUiSchema : appUiSchema
+  // console.log(uiSchema)
+  
+  // content_id update state
   useEffect(() => {
     if (data) {
       setContent(data)
@@ -100,6 +103,7 @@ export default function DynamicForm (
     }
   }, [data?.id])
 
+  // next-chapter update state
   useEffect(() => {
     const handleNext = () => {
       if(data) {
@@ -148,21 +152,20 @@ export default function DynamicForm (
     return () => broker.off('ui:cancel-edit', refreshForm)
   }, [mode])
 
+  // fetch categories on mount
   useEffect(() => {
     fetch(`${API_URL}/categories/`)
       .then(r => r.json())
       .then(setCategories)
   }, [])
 
-  // fetch on mount
+  // fetch registered apps on mount
   useEffect(() => {
     fetch(`${API_URL}/apps/registry`).then(r => r.json()).then(setRegisteredApps)
   }, [])
 
-  function handleChange(field: string, value: string | string[] | number) {
-    setFormData(prev => ({ ...prev, [field]: value }))
-  }
 
+// ------ HELPERS ------------------------------
 // Nested JSONB DB-objects (like metadata)
   function getNestedValue(obj: Record<string, string | number | string[] | PollOption[] | null>, path: string): string | number | string[] | undefined {    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -170,6 +173,7 @@ export default function DynamicForm (
     return value as string | number | string[] | undefined
   }
 
+// ui-schema field-conditions
   const shouldRender = (element: UIElement): boolean => {    
     if (!element.condition) return true
 
@@ -186,11 +190,15 @@ export default function DynamicForm (
     return true
   }
 
-// UI-schema Fields
+//** ==========================================================================
+// This Renders UI-elements:
+// 1. traverse *.ui.schema.json
+// 2. render JSX for each widget-key: "widget": "select" (input/option...)
+// ========================================================================== */
   function renderField(element: { field: string; widget: string;
       placeholder?: string;
       rows?: number;
-       min?: number;
+      min?: number;
       max?: number;
       edit?: boolean;
       view?: boolean;
@@ -200,6 +208,8 @@ export default function DynamicForm (
 
     const fieldSchema = (dataSchema.properties as Record<string, any>)[element.field]
     const value = getNestedValue(formData, element.field)// formData[element.field] || ''
+    console.log('What is value: ', value);
+    
 
     if (mode === 'read') {
       switch (element.widget) {
@@ -248,6 +258,7 @@ export default function DynamicForm (
           (!element.edit || !element.view) ? <></>: 
           <input
             type="text"
+            id={`form-${element.field}`}
             value={value}
             className={element.field}
             placeholder={element.placeholder}
@@ -272,13 +283,12 @@ export default function DynamicForm (
 
           const selectValue = value as string || ''
           const options = element.options ?? fieldSchema?.enum  // ← uiSchema first, dataSchema fallback
-
           
           return (
             <select id={selectValue} 
-            className={selectValue}
-            value={selectValue}
-            onChange={e => handleChange(element.field, e.target.value)}
+              className={selectValue}
+              value={selectValue}
+              onChange={e => handleChange(element.field, e.target.value)}
             >
               <option>-- {element.field.replace('_',' ')} --</option>
               {options.map((opt: string) => 
@@ -286,13 +296,6 @@ export default function DynamicForm (
               )}
             </select>
         )}
-      case 'polls-options':
-          return (
-            <PollsOptionsWidget
-              value = {formData[element.field] || []}
-              onChange={val => handleChange(element.field, val)}
-            />
-          )
       case 'app-select':
         return (
           <select
@@ -305,12 +308,20 @@ export default function DynamicForm (
             ))}
           </select>
         )
+      case 'polls-options':
+          return (
+            <PollsOptionsWidget
+              value = {formData[element.field] || []}
+              onChange={val => handleChange(element.field, val)}
+            />
+          )
+     
       case 'toggle':
         return (
-          <label>
-            {element.field.replace('_', ' ')}
+          <>
+            <span>{element.field.replace('_', ' ')}</span>
             <input type="checkbox" />
-          </label>
+          </>
         )
       case 'slider':
         return (
@@ -382,8 +393,12 @@ export default function DynamicForm (
   }
 
 // ========================================================================
-// Submit Data
+// Handlers: Change, Submit
 // ========================================================================
+
+  function handleChange(field: string, value: string | string[] | number) {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
 
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault()
@@ -392,40 +407,18 @@ export default function DynamicForm (
     const selectedApp = registeredApps.find(a => a.id === formData.app_id)
     const isPollsApp = selectedApp?.component_name === 'PollsApp'
 
-    if (isPollsApp) {
-      try {
-        const token = storage.getToken()
-        const response = await fetch(`${API_URL}/polls/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            title: formData.title,
-            slug: formData.slug,
-            deck: formData.deck,
-            app_id: formData.app_id,
-            widget_size: formData.widget_size || 'medium',
-            question: formData.question,
-            poll_type: formData.poll_type,
-            options: formData.options || [],
-            closes_at: formData.closes_at || null,
-          })
-        })
-        if (response.ok) {
-          const created = await response.json()
-          setContent(created)
-          onSaveSuccess()
-        }
-      } catch (error) {
-        console.error('Failed to create poll:', error)
-      }
-      return
-    }
-
     // Restructure formData to match API expectation
-    const payload = {
+    const payload = isPollsApp? {
+      title: formData.title,
+      slug: formData.slug,
+      deck: formData.deck,
+      app_id: formData.app_id,
+      widget_size: formData.widget_size || 'medium',
+      question: formData.question,
+      poll_type: formData.poll_type,
+      options: formData.options || [],
+      closes_at: formData.closes_at || null,
+    }:{
       title: formData.title as string,
       deck: formData.deck as string,
       slug: formData.slug as string,
@@ -444,10 +437,14 @@ export default function DynamicForm (
       author_id: storage.getUser()?.id as number || 1,
     }
 
+    let REQUEST_URL = content?.id? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
+    let REQUEST_METOD = content?.id? 'PUT' : 'POST'
+    if(isPollsApp) {
+      REQUEST_URL = `${API_URL}/polls/`
+      REQUEST_METOD = 'POST'
+    }
+
     try {
-      const REQUEST_URL = content?.id? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
-      const REQUEST_METOD = content?.id? 'PUT' : 'POST'
-      
       const token = storage.getToken()
       const response = await fetch(REQUEST_URL, {
         method: REQUEST_METOD,
@@ -459,15 +456,15 @@ export default function DynamicForm (
       })
       
       if (response.ok) {
-        const updatedContent = await response.json()
-        setContent(updatedContent)
+        const content = await response.json()
+        setContent(content)
         onSaveSuccess()
       }
     } catch (error) {
       console.error('Failed to create content:', error)
     }
   }
-
+  
 // ==============================================================
 // Render Content
 
@@ -480,7 +477,7 @@ export default function DynamicForm (
       {uiSchema.elements.map(el => (
         (shouldRender(el)) &&
         (
-          <div className={el.widget==='select' || el.widget==='toggle' ? 'select-box' : ''} key={el.field} >
+          <div className={['select','toggle','app-select'].includes(el.widget) ? 'select-box' : ''} key={el.field} >
             {/* <label>{el.field}</label> */}
             {renderField(el)}
           </div>

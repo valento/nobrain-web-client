@@ -27,11 +27,41 @@ interface Poll {
 }
 
 interface PollsAppProps {
-  contentSlug?: string
+  item?: ContentItem
   mode?: 'widget' | 'full'
+  instance_slug?: string
 }
 
-export function PollsApp({ contentSlug, mode='widget' }: PollsAppProps) {
+interface ContentItem {
+  id: number
+  title: string
+  deck: string | null
+  body: string
+  author_id: number | null
+  author_username: string | null
+  parent_id: number | null
+  created_at: string
+  updated_at: string
+  slug: string | null
+  content_type: string
+  component_name: string | null
+  route_path: string | null
+  app_config: Record<string, any>
+  category: string
+  category_id: number | null   // added
+  category_slug: string | null // was string, nullable for safety
+  priority: number
+  widget_size: string
+  widget_vertical: boolean
+  view_count: number
+  social_score: number
+  price: number
+  metadata: Record<string, any>
+  tags: string[]
+  sequence_order: number | null
+}
+
+export function PollsApp({ item, instance_slug, mode='widget' }: PollsAppProps) {
 
   const navigate = useNavigate()
 
@@ -41,9 +71,9 @@ export function PollsApp({ contentSlug, mode='widget' }: PollsAppProps) {
   const [ratingValue, setRatingValue] = useState(5)
 
   useEffect(() => {
-    if (contentSlug) {
+    if (item?.slug || instance_slug) {
       const token = storage.getToken()
-      fetch(`${config.apiUrl}/polls/by-content/${contentSlug}`, {
+      fetch(`${config.apiUrl}/polls/by-content/${item?.slug || instance_slug}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       })
         .then(res => res.json() as Promise<Poll>)
@@ -52,7 +82,7 @@ export function PollsApp({ contentSlug, mode='widget' }: PollsAppProps) {
           setLoading(false)
         })
     }
-  }, [contentSlug])
+  }, [item?.slug])
 
   const handleVote = async (optionId: number) => {
     const token = storage.getToken()
@@ -79,76 +109,44 @@ export function PollsApp({ contentSlug, mode='widget' }: PollsAppProps) {
 
   if ( mode === 'widget' ) {
     return (
-      <div className="polls-widget" onClick={() => navigate('/play/PollsApp')}>Poll Widget</div>
+      <div className="polls-widget" onClick={() => navigate(`/play/PollsApp/${item?.slug}`)}>{item?.slug}</div>
     )
   }
   if (loading) return <div className="polls-widget">Loading...</div>
   if (!poll) return <div className="polls-widget">Poll not found</div>
 
-
   return (
-    <div className={`polls-widget polls-${poll.poll_type}`}>
-      <h3 className="poll-question">{poll.question}</h3>
-      <span className="poll-votes">{poll.total_votes} votes</span>
+    <div className={`polls-app polls-${poll.poll_type}`}>
+      <h3 className="poll-question cyrilic-title">{poll.question}</h3>
+      <span className="poll-votes roboto-1">{poll.total_votes} votes</span>
 
       {/* Results bars — always visible */}
       <div className="poll-results">
         {poll.options.map(opt => (
-          <div key={opt.id} className="poll-option">
-            <div className="poll-bar-row">
-              <span className="poll-option-text">{opt.text}</span>
-              <span className="poll-option-pct">{opt.percentage}%</span>
+          <div key={opt.id} className="poll-option-row">
+            <div className="poll-option-left">
+              <div className="poll-option-header">
+                <span className="poll-option-text">{opt.text}</span>
+                <span className="poll-option-pct roboto-1">{opt.percentage}%</span>
+              </div>
+              <div className="poll-bar">
+                <div
+                  className="poll-bar-fill"
+                  style={{ width: `${opt.percentage}%` }}
+                />
+              </div>
             </div>
-            <div className="poll-bar">
-              <div
-                className="poll-bar-fill"
-                style={{ width: `${opt.percentage}%` }}
-              />
+            <div className="poll-option-right roboto-1">
+              {!voted && !poll.is_closed && (
+                <button onClick={() => handleVote(opt.id)}>Vote</button>
+              )}
+              {voted && opt.id === poll.user_option_id && (
+                <span className="poll-voted-mark">✓</span>
+              )}
             </div>
           </div>
         ))}
       </div>
-
-      {/* Vote controls — shown if not voted and not closed */}
-      {!voted && !poll.is_closed && (
-        <div className="poll-actions">
-          {poll.poll_type === 'binary' && (
-            <div className="poll-binary">
-              {poll.options.map(opt => (
-                <button key={opt.id} onClick={() => handleVote(opt.id)}>
-                  {opt.text}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {poll.poll_type === 'single' && (
-            <div className="poll-single">
-              {poll.options.map(opt => (
-                <button key={opt.id} onClick={() => handleVote(opt.id)}>
-                  {opt.text}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {poll.poll_type === 'rating' && (
-            <div className="poll-rating">
-              <input
-                type="range"
-                min={1}
-                max={poll.options.length}
-                value={ratingValue}
-                onChange={e => setRatingValue(Number(e.target.value))}
-              />
-              <span>{ratingValue}</span>
-              <button onClick={() => handleVote(poll.options[ratingValue - 1].id)}>
-                Rate
-              </button>
-            </div>
-          )}
-        </div>
-      )}
 
       {voted && <span className="poll-voted">✓ You voted</span>}
       {poll.is_closed && <span className="poll-closed">Poll closed</span>}

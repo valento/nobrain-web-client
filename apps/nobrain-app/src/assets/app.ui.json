@@ -4,6 +4,8 @@
     { "field": "deck", "widget": "input", "placeholder": "Subtitle", "edit": true, "view": true },
     { "field": "slug", "widget": "input", "edit": true, "view": true },
     { "field": "app_id", "widget": "app-select" },
+    { "field": "category_id", "widget": "select" },
+    { "field": "status", "widget": "select", "options": ["draft", "published", "archived"] },
     { "field": "widget_size", "widget": "select", "options": ["small", "medium", "large"] },
     {
       "field": "poll_type",

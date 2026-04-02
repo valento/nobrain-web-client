@@ -13,7 +13,7 @@ function App() {
       <Route path='/read/:content_id' element={<ContentWrapperPage initialMode='read' />} />
       <Route path='/create/:content_type' element={<ContentWrapperPage initialMode='edit' />} />
       <Route path='/repeat' element={''} />
-      <Route path='/play/:app_name' element={<AppPage />} />
+      <Route path='/play/:app_name/:instance_slug' element={<AppPage />} />
       <Route path='/play' element={''} />
     </Routes>
   )
