@@ -2,11 +2,17 @@
   "elements": [
     { "field": "title", "widget": "input", "placeholder": "Title", "edit": true, "view": true },
     { "field": "deck", "widget": "input", "placeholder": "Subtitle", "edit": true, "view": true },
-    { "field": "slug", "widget": "input", "edit": true, "view": true },
+    { "field": "body", "widget": "textarea", "placeholder": "Add some rules, descriptions, clarifications here..." },
+    { "field": "slug", "widget": "input", "edit": false, "view": false },
     { "field": "app_id", "widget": "app-select" },
     { "field": "category_id", "widget": "select" },
     { "field": "status", "widget": "select", "options": ["draft", "published", "archived"] },
     { "field": "widget_size", "widget": "select", "options": ["small", "medium", "large"] },
+    { "field": "closes_at",
+      "widget": "datetime",
+      "placeholder": "Poll closing date (optional)",
+      "condition": { "field": "app_id", "component":"PollsApp"}
+    },
     {
       "field": "poll_type",
       "widget": "select",
@@ -26,11 +32,6 @@
         "field": "app_id", "component": "PollsApp",
         "also": { "field": "poll_type", "value": "single" }
       }
-    },
-    {
-      "field": "closes_at",
-      "widget": "datetime",
-      "condition": { "field": "app_id", "component": "PollsApp" }
     }
   ]
 }

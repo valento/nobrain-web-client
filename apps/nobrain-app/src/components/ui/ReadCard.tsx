@@ -15,11 +15,14 @@ export default function ReadCard({ item }: { item: ContentItem }) {
     promoted
   }
 
+  const dt = new Date(item.updated_at)
+  const random_theme = dt.getDate() % 2 === 0? '' : 'dark'
+
   return (
     <div className={'widget ' + item.category_slug + ' ' + Priority[item.priority] }>
       
       {/* // <a href={`/read/${item.category}/${item.id}`} className="read-card"> */}
-        <div className='timestamp'>{item.category_slug} | {new Date(item.updated_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+        <div className={`timestamp`}>{item.category_slug} | {dt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
         <div className="header" onClick={() => navigate(`/read/${item.slug || item.id}`)}>
           <h1>{item.title}</h1>
           {item.deck && <p>{item.deck}</p>}

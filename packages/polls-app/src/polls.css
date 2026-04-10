@@ -77,10 +77,37 @@
   font-optical-sizing: auto;
   font-weight: 400;
 }
+.polls-widget {
+  min-height: 10rem;
+  text-align: left;
+  .title {
+    min-height: 2.5rem;
+    font-family: "Roboto", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-optical-sizing: auto;
+    font-style: normal;
+  }
+  span {
+    font-family: "Roboto", sans-serif;
+    font-weight: 200;
+    font-size: .9rem;
+    color: rgb(var(--main-dark)/.5);
+  }
+}
 
 .roboto-1 {
   font-family: "Roboto", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
-  font-variation-settings: "wdth" 100;
+}
+
+/* =========================================================================== */
+/* ===== PIES ================================================================ */
+/* =========================================================================== */
+
+.pie {
+  .yes {
+    background-color: rgb(255 255 255 / .5);
+  }
 }

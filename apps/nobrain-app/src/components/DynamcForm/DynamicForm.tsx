@@ -40,7 +40,7 @@ type UIElement = {
  * Renders full content pages
  * in READ or EDIT or CREATE modes.
  * 
- * CREATE takes /create/{apps | reads} mode from URL and
+ * CREATE takes /create/{app | read} mode from URL and
  * renders empty Form given the uiSchema/dataSchema for field-types
  * and default data
  * 
@@ -50,7 +50,6 @@ type UIElement = {
  * READ renders just a page with content_id data
  * 
  */
-
 
 
 export default function DynamicForm (
@@ -66,8 +65,8 @@ export default function DynamicForm (
   ) {
 
   const API_URL = import.meta.env.VITE_API_NET || 'http://localhost:8000'
-  const {content_type} = useParams() || 'reads'
-  const {content_id} = useParams() || 'reads'
+  const {content_type} = useParams() || 'read'
+  const {content_id} = useParams() || null
 
   const [content, setContent] = useState<ContentWithSchemas | null>(null)
   const [formData, setFormData] = useState<Record<string, string | number | string[] | PollOption[] | null>>({})
@@ -75,8 +74,7 @@ export default function DynamicForm (
   const [registeredApps, setRegisteredApps] = useState<AppRegistryEntry[]>([])
   
   const dataSchema = staticDataSchema
-  const uiSchema = content_type === 'reads' || content_id ? readUiSchema : appUiSchema
-  // console.log(uiSchema)
+  const uiSchema = content_type === 'read' || content_id ? readUiSchema : appUiSchema
   
   // content_id update state
   useEffect(() => {
@@ -207,9 +205,7 @@ export default function DynamicForm (
     if(!content && mode == 'read') return null
 
     const fieldSchema = (dataSchema.properties as Record<string, any>)[element.field]
-    const value = getNestedValue(formData, element.field)// formData[element.field] || ''
-    console.log('What is value: ', value);
-    
+    const value = getNestedValue(formData, element.field)// formData[element.field] || ''    
 
     if (mode === 'read') {
       switch (element.widget) {
@@ -309,13 +305,12 @@ export default function DynamicForm (
           </select>
         )
       case 'polls-options':
-          return (
-            <PollsOptionsWidget
-              value = {formData[element.field] || []}
-              onChange={val => handleChange(element.field, val)}
-            />
-          )
-     
+        return (
+          <PollsOptionsWidget
+            value = {formData[element.field] || []}
+            onChange={val => handleChange(element.field, val)}
+          />
+        )
       case 'toggle':
         return (
           <>
@@ -386,7 +381,14 @@ export default function DynamicForm (
           />
         )
       case 'datetime':
-        return
+        return (
+          <input
+            type="datetime-local"
+            id={`form-${element.field}`}
+            value={value || ''}
+            onChange={e => handleChange(element.field, e.target.value)}
+          />
+        )
       default:
         return <p className='hideme'>Unknown widget: {element.field}</p>
     }
@@ -410,7 +412,7 @@ export default function DynamicForm (
     // Restructure formData to match API expectation
     const payload = isPollsApp? {
       title: formData.title,
-      slug: formData.slug,
+      // slug: formData.slug,
       deck: formData.deck,
       app_id: formData.app_id,
       widget_size: formData.widget_size || 'medium',
@@ -418,6 +420,8 @@ export default function DynamicForm (
       poll_type: formData.poll_type,
       options: formData.options || [],
       closes_at: formData.closes_at || null,
+      category_id: formData.category_id || null,
+      status: formData.status || 'draft',
     }:{
       title: formData.title as string,
       deck: formData.deck as string,
@@ -437,13 +441,14 @@ export default function DynamicForm (
       author_id: storage.getUser()?.id as number || 1,
     }
 
-    let REQUEST_URL = content?.id? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
+    let REQUEST_URL = content_type === 'read' ? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
+    REQUEST_URL = content?.slug ? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
     let REQUEST_METOD = content?.id? 'PUT' : 'POST'
     if(isPollsApp) {
       REQUEST_URL = `${API_URL}/polls/`
       REQUEST_METOD = 'POST'
     }
-
+    
     try {
       const token = storage.getToken()
       const response = await fetch(REQUEST_URL, {
@@ -467,6 +472,7 @@ export default function DynamicForm (
   
 // ==============================================================
 // Render Content
+if(content_type && !['app','read'].includes(content_type)) return <>Wrong URL...</>
 
   return mode == 'edit' ? (
     <form className='json-form'
@@ -477,13 +483,15 @@ export default function DynamicForm (
       {uiSchema.elements.map(el => (
         (shouldRender(el)) &&
         (
-          <div className={['select','toggle','app-select'].includes(el.widget) ? 'select-box' : ''} key={el.field} >
+          <div className={['select','toggle','app-select','datetime'].includes(el.widget) ? 'select-box' : ''} key={el.field} >
             {/* <label>{el.field}</label> */}
             {renderField(el)}
           </div>
         )
       ))}
-      <button className='submit' type="submit">Save</button>
+      <div className='full-line'>
+        <button className='submit' type="submit">Save</button>
+      </div>
       {mode === 'edit' && formData && data?.id && formData.parent_id != null && (
         <button
           className='submit secondary'
@@ -495,7 +503,7 @@ export default function DynamicForm (
       )}
     </form>
   ) : (
-    <article>
+    <article className={data?.category_slug || ''}>
       <div>
       {
         uiSchema.elements.map(el => <div key={el.field}>{renderField(el)}</div>)

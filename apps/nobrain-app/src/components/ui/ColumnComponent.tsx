@@ -11,7 +11,7 @@ export default function ColumnComponent({ bricks }: { bricks: BrickItem[]}) {
         <BrickComponent key={i} brickType={brick.brick_type} >
           {brick.items.map(item => (
             item.content_type === 'app'
-            ? <AppCard item={item}/>
+            ? <AppCard item={item} key={item.id}/>
             : <ReadCard key={item.id} item={item} />
           ))}
         </BrickComponent>

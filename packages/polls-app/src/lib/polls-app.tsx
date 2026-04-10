@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { config, storage } from '@nx-mono/broker'
 import '../polls.css'
+import DonutChart from './components/donnut-chart'
+import PieChart from './components/pie-chart'
 
 interface PollOption {
   id: number
@@ -108,8 +110,15 @@ export function PollsApp({ item, instance_slug, mode='widget' }: PollsAppProps) 
   }
 
   if ( mode === 'widget' ) {
+    
     return (
-      <div className="polls-widget" onClick={() => navigate(`/play/PollsApp/${item?.slug}`)}>{item?.slug}</div>
+      <div className="polls-widget" onClick={() => navigate(`/play/PollsApp/${item?.slug}`)}>
+        <span>{item?.category_slug}</span>
+        <div className='title'>{item?.title}</div>
+        {poll?.options.length && ['single'].includes(poll.poll_type) && <DonutChart category={item?.category_slug} options={poll?.options} />}
+        {poll?.options.length && ['binary'].includes(poll.poll_type) && <PieChart category={item?.category_slug} options={poll?.options} />}
+        
+      </div>
     )
   }
   if (loading) return <div className="polls-widget">Loading...</div>
