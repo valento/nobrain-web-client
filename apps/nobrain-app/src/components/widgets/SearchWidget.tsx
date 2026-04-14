@@ -19,7 +19,6 @@ export default function SearchWidget () {
     }
 
     timerRef.current = setTimeout(async () => {
-      console.log('Query these...', value)
       try {
         const data = await searchContent(value)
         setResults(data)

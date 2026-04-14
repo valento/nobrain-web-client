@@ -54,7 +54,7 @@ export default function UserComponent({mode=false}: {mode:boolean}) {
               width="1rem"
               height="1rem"
               viewBox="0 0 52 52"
-              enable-background="new 0 0 52 52"
+              enableBackground="new 0 0 52 52"
             >
               <path d="M50,43v2.2c0,2.6-2.2,4.8-4.8,4.8H6.8C4.2,50,2,47.8,2,45.2V43c0-5.8,6.8-9.4,13.2-12.2
                 c0.2-0.1,0.4-0.2,0.6-0.3c0.5-0.2,1-0.2,1.5,0.1c2.6,1.7,5.5,2.6,8.6,2.6s6.1-1,8.6-2.6c0.5-0.3,1-0.3,1.5-0.1

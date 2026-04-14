@@ -18,8 +18,10 @@ interface FrequencyResponse {
 
 export function LototechApp({ mode = 'widget' } : { mode?:'widget' | 'full'}) {
   const navigate = useNavigate()
-
   const API_URL = config.apiUrl
+  const nowMM = new Date().getMonth
+  const nowYYYY = new Date().getFullYear()
+  const hot_number_YYYY = nowYYYY
 
   // const [view, setView] = useState<'widget' | 'full'>(mode)
   const [hotNumber, setHotNumber] = useState<NumberStat | null>(null)
@@ -28,7 +30,7 @@ export function LototechApp({ mode = 'widget' } : { mode?:'widget' | 'full'}) {
   // const user = storage.getUser()
 
   useEffect(() => {
-    fetch(`${API_URL}/toto2/stats/frequency?year_from=2010&year_to=2026`)
+    fetch(`${API_URL}/toto2/stats/frequency?year_from=${hot_number_YYYY.toString()}&year_to=${nowYYYY.toString()}`)
       .then(res => res.json() as Promise<FrequencyResponse>)
       .then((data: FrequencyResponse) => {
         setHotNumber(data.numbers[0])
@@ -40,27 +42,39 @@ export function LototechApp({ mode = 'widget' } : { mode?:'widget' | 'full'}) {
   if (loading) return <div className="lototech-widget">Loading...</div>
 
   if (mode === 'widget') {
+
     return (
       <div className='lototech-cyrilic lototech-hot' onClick={() => navigate('/play/LototechApp/22')}>
-        <h1 className=''>
-          <svg version="1.1"
-            id="svg2"
-            xmlns="http://www.w3.org/2000/svg"
-            width="1.3rem"
-            height="1.3rem"
-            fill="#ff5500"
-            viewBox="0 0 1200 1200" enable-background="new 0 0 1200 1200">
-            <path id="path8046" inkscape:connector-curvature="0" d="M381.64,1200C135.779,1061.434,71.049,930.278,108.057,751.148
-              c27.321-132.271,116.782-239.886,125.36-371.903c38.215,69.544,54.183,119.691,58.453,192.364
-              C413.413,422.695,493.731,216.546,498.487,0c0,0,316.575,186.01,337.348,466.98c27.253-57.913,40.972-149.892,13.719-209.504
-              c81.757,59.615,560.293,588.838-64.818,942.524c117.527-228.838,30.32-537.611-173.739-680.218
-              c13.628,61.319-10.265,290.021-100.542,390.515c25.014-167.916-23.8-238.918-23.8-238.918s-16.754,94.054-81.758,189.065
-              C345.537,947.206,304.407,1039.291,381.64,1200L381.64,1200z"/>
+        <div className='loto-logo'>
+          <svg
+            width="1.5rem"
+            height="1.5rem"
+            viewBox="0 0 1.5rem 1.5rem" xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx=".75rem" cy=".75rem" r=".64rem" stroke="#ff5500" stroke-width=".2rem" fill="none" />
+            <svg
+              width="1.35rem"
+              height="1.35rem"
+              fill="#ff5500"
+              viewBox="-14 -9 35 35"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M250.766275,121 L257.307151,112.675249 C257.597723,112.30543 257.45796,112 256.989522,112
+                L252.837704,112 L257.385168,104.724056 C257.635505,104.323518 257.453413,104 256.979366,104 L251.265048,104
+                C251.024937,104 250.778118,104.178755 250.704616,104.399261 L247.106366,115.194013
+                C246.957416,115.640864 247.217499,116 247.686001,116 L250.837704,116 L248.837704,121 L246.310817,121
+                C246.033476,121 245.921271,121.192928 246.058538,121.42807 L247.89381,124.57193
+                C248.031821,124.808347 248.345798,124.884602 248.581906,124.749782
+                L254.275822,121.498515 C254.757992,121.223193 254.698369,121 254.1493,121 L250.766275,121 Z"
+                transform="translate(-246 -104)"/>
+            </svg>
           </svg>
-          &nbsp;T0T0T0
-        </h1>
+          <p>
+            &nbsp;T0T0T0
+          </p>
+        </div>
         <p className="number">{hotNumber?.number}</p>
-        <p className="body">теглен {hotNumber?.frequency} пъти (за 15г.)</p>
+        <p className="body">{hotNumber?.frequency} тиража</p>
         <button onClick={() => null}>
         </button>
       </div>

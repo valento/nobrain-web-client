@@ -8,12 +8,17 @@ interface PollOption {
 
 interface OptionsProp {
   options: PollOption[],
-  category?: string | null
+  category?: string | null,
+  closing_at?: string | null
 }
 
-export default function DonutChart({ options, category='politics' }: OptionsProp) {
-  
-  let  R = 40, CX = 50, CY = 50
+export default function DonutChart({ options, category='politics', closing_at='' }: OptionsProp) {
+  const targetDate = new Date(closing_at || '')
+  const now = new Date()
+  const diffInMs = targetDate.getTime() - now.getTime()
+  const daysLeft = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+
+  let R = 40, CX = 50, CY = 50
   const circumference = 2 * Math.PI * R; // ~251.32
   const gapSize = .5; // Fixed gap in "units" (around 3px visually)
   const main_color = category && ['politics'].includes(category)? '80 170 255' : '51 51 51'
@@ -76,8 +81,8 @@ export default function DonutChart({ options, category='politics' }: OptionsProp
   return (
     <div style={{ width: '150px', height: '150px' }}>
       <svg
-        width="100%"
-        height="100%"
+        width="95%"
+        height="95%"
         viewBox="0 0 100 100"
         style={{ transform: 'rotate(-90deg)' }}
       >
@@ -95,13 +100,13 @@ export default function DonutChart({ options, category='politics' }: OptionsProp
             {
               winner.percentage === op.percentage &&
             // {/* The Pointer Line (The "Clock Hand") */}
-              <line 
-                x1="70" 
-                y1="50" 
+              <line
+                x1="70"
+                y1="50"
                 x2="90" // Length is 20 units (50 to 70)
-                y2="50" 
-                stroke="#333" 
-                strokeWidth=".5" 
+                y2="50"
+                stroke="#333"
+                strokeWidth=".5"
                 strokeLinecap="round"
                 style={{ 
                   transform: `rotate(${rotationAngle}deg)`, 
@@ -111,7 +116,6 @@ export default function DonutChart({ options, category='politics' }: OptionsProp
               />
             }
             <circle
-              key={index}
               cx={CX}
               cy={CY}
               r={R}
@@ -128,7 +132,7 @@ export default function DonutChart({ options, category='politics' }: OptionsProp
         })}
 
         {/* Center Text - Rotated back to 0deg */}
-        <g style={{ transform: 'rotate(90deg)', transformOrigin: 'center' }}>
+        <g key={'gee'} style={{ transform: 'rotate(90deg)', transformOrigin: 'center' }}>
           <text
             x="50"
             y="53"
@@ -137,7 +141,7 @@ export default function DonutChart({ options, category='politics' }: OptionsProp
           >
             {winner.percentage}
           </text>
-          <text 
+          <text
             x="50"
             y="58"
             textAnchor="middle"
@@ -145,6 +149,25 @@ export default function DonutChart({ options, category='politics' }: OptionsProp
           >
             {winner.text.split(' ').slice(0,1)}
           </text>
+          {closing_at && <svg
+            y="4" 
+            width=".9rem"
+            height=".9rem"
+            viewBox="0 0 24 24"
+            fill="#333"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path  d="m12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12c-.02-6.619-5.381-11.98-11.998-12zm0 21.6c-5.302 0-9.6-4.298-9.6-9.6s4.298-9.6 9.6-9.6 9.6 4.298 9.6 9.6c-.016 5.296-4.304 9.584-9.598 9.6zm.6-15.6h-1.8v7.2l6.24 3.84.96-1.56-5.4-3.24z"/>
+          </svg>}
+          {closing_at && <text
+            x="12"
+            y="13"
+            textAnchor="start"
+            fill='#666'
+            style={{ fontSize: '.55rem', fontWeight: '', fontFamily: 'sans-serif' }}
+          >
+            {`${daysLeft > 0? daysLeft : 0} дни`}
+          </text>}
         </g>
       </svg>
     </div>

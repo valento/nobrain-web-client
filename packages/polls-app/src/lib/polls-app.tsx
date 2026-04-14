@@ -113,10 +113,12 @@ export function PollsApp({ item, instance_slug, mode='widget' }: PollsAppProps) 
     
     return (
       <div className="polls-widget" onClick={() => navigate(`/play/PollsApp/${item?.slug}`)}>
-        <span>{item?.category_slug}</span>
-        <div className='title'>{item?.title}</div>
-        {poll?.options.length && ['single'].includes(poll.poll_type) && <DonutChart category={item?.category_slug} options={poll?.options} />}
-        {poll?.options.length && ['binary'].includes(poll.poll_type) && <PieChart category={item?.category_slug} options={poll?.options} />}
+        <div className='title'>
+          <span>{item?.category_slug}</span>
+          <div>{item?.title}</div>
+        </div>
+        {poll?.options.length && ['single'].includes(poll.poll_type) && <DonutChart closing_at={poll?.closes_at} category={item?.category_slug} options={poll?.options} />}
+        {poll?.options.length && ['binary'].includes(poll.poll_type) && <PieChart closing_at={poll?.closes_at} category={item?.category_slug} options={poll?.options} />}
         
       </div>
     )

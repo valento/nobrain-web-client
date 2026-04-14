@@ -28,7 +28,7 @@ export default function Landing() {
       <div className="page-grid">
 
 {/* ======== Left ================================================================================ */}
-        <div className="column">
+        <div>
           <ColumnComponent bricks={bricks?.left} />
         </div>
 {/* ======== Center ================================================================================ */}
