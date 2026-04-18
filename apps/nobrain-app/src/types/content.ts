@@ -39,11 +39,10 @@ export interface ContentWithSchemas {
   created_at: string
   updated_at: string
   parent_id: number | null
-  widget_size: string
-  widget_vertical: boolean
   content_type: string
   category_id: number | null   // added
   category_slug: string | null // added
+  widget_size: string
   price: number
 }
 

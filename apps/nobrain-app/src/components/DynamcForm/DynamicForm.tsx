@@ -34,7 +34,6 @@ type UIElement = {
   }
 }
 
-
 /**
  * 
  * Renders full content pages
@@ -282,7 +281,7 @@ export default function DynamicForm (
           
           return (
             <select id={selectValue} 
-              className={selectValue}
+              className={''}
               value={selectValue}
               onChange={e => handleChange(element.field, e.target.value)}
             >
@@ -416,6 +415,8 @@ export default function DynamicForm (
       deck: formData.deck,
       app_id: formData.app_id,
       widget_size: formData.widget_size || 'medium',
+      interaction_mode: formData.interaction_mode || 'social',
+      allow_multiple_shares: formData.allow_multiple_shares || false,
       question: formData.question,
       poll_type: formData.poll_type,
       options: formData.options || [],
@@ -437,10 +438,12 @@ export default function DynamicForm (
         status: formData.status,
         seo_keywords: formData.seo_keywords
       },
+      widget_size: formData.widget_size || 'medium',
+      widget_vertical: formData.widget_vertical || false,
       parent_id: formData.parent_id,
       author_id: storage.getUser()?.id as number || 1,
     }
-
+    
     let REQUEST_URL = content_type === 'read' ? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
     REQUEST_URL = content?.slug ? `${API_URL}/content/${content?.id}` : `${API_URL}/content/`
     let REQUEST_METOD = content?.id? 'PUT' : 'POST'

@@ -127,7 +127,7 @@ export function PollsApp({ item, instance_slug, mode='widget' }: PollsAppProps) 
   if (!poll) return <div className="polls-widget">Poll not found</div>
 
   return (
-    <div className={`polls-app polls-${poll.poll_type}`}>
+    <div className={`polls-app polls-${poll.poll_type} roboto-1`}>
       <h3 className="poll-question cyrilic-title">{poll.question}</h3>
       <span className="poll-votes roboto-1">{poll.total_votes} votes</span>
 

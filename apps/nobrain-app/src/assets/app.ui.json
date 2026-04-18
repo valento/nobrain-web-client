@@ -7,17 +7,28 @@
     { "field": "app_id", "widget": "app-select" },
     { "field": "category_id", "widget": "select" },
     { "field": "status", "widget": "select", "options": ["draft", "published", "archived"] },
-    { "field": "widget_size", "widget": "select", "options": ["small", "medium", "large"] },
-    { "field": "closes_at",
-      "widget": "datetime",
-      "placeholder": "Poll closing date (optional)",
-      "condition": { "field": "app_id", "component":"PollsApp"}
-    },
+    { "field": "widget_size", "widget": "select", "options": ["small", "medium", "large"] },  
     {
       "field": "poll_type",
       "widget": "select",
       "options": ["single", "binary", "rating"],
       "condition": { "field": "app_id", "component": "PollsApp" }
+    },
+    
+    { "field": "interaction_mode",
+      "widget": "select",
+      "options": ["social", "market"],
+      "condition": { "field": "app_id", "component": "PollsApp" }
+    },
+    { "field": "closes_at",
+      "widget": "datetime",
+      "placeholder": "Poll closing date (optional)",
+      "condition": { "field": "app_id", "component":"PollsApp"}
+    },
+    { "field": "allow_multiple_shares",
+      "widget": "toggle",
+      "condition": { "field": "app_id", "component": "PollsApp" },
+      "tooltip": "Default is: single choice"
     },
     {
       "field": "question",

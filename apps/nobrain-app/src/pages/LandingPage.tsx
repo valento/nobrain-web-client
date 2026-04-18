@@ -45,14 +45,7 @@ export default function Landing() {
 
 {/* ======== Right ================================================================================ */}
         <div className="column">
-          <div className="brick">
-            <div className="widget number">
-              <div className='timestamp'>services | Oct 01, 2025</div>
-            </div>
-            <div className="widget number">
-              <div className='timestamp'>services | Oct 01, 2025</div>
-            </div>
-          </div>
+          
           <div className="brick">
             <div className="widget theme-inter">
               <div className='timestamp dark'>services | Oct 01, 2025</div>
@@ -66,33 +59,8 @@ export default function Landing() {
               </div>
             </div>
           </div>
-          <div className="brick">
-            <div className="widget number">
-              <div className='timestamp dark'>services | Oct 01, 2025</div>
-              <div className="header">
-                Lorem Ipsum
-                <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
-              </div>
-              
-              <div className='body'>There are many variations of passages of Lorem Ipsum available,
-                but the majority have suffered alteration in some form, by injected humour, or...
-              </div>
-            </div>
-          </div>
-          <div className="brick">
-            <div className="widget number">
-              <div className='timestamp'>services | Oct 01, 2025</div>
-              <div className="header">
-                Lorem Ipsum
-                <div className="subheader">by Julian Langestraat, Global Brand Ambassador</div>
-              </div>
-              
-              <div className='body'>There are many variations of passages of Lorem Ipsum available,
-                but the majority have suffered alteration in some form, by injected humour, or...
-              </div>
-            </div>
-          </div>
-          {/* Try Stack */}
+          
+          {/* Try Stacked Brick */}
           <div className="brick">
             
             <div className="widget">
